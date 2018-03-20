@@ -7,12 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-
-
-
 using namespace std;
-
-
 
 
 Sound*	Chasseur::_hunter_fire;	// bruit de l'arme du chasseur.
@@ -31,10 +26,22 @@ Labyrinthe::Labyrinthe (char* filename)
 
  	int w = 0;
 	int h = 0;
+	bool vu;
+	int tmpi = 0;
+	int y = 0;
 	float chasx = 0.;
 	float chasy = 0.;
+
 	_nwall = 0;
+	_nboxes = 0;
+	_nguards = 1;
+
 	static vector<Wall> wall;
+	static vector<Box> box;
+	static vector<Mover*> guards;
+	guards.push_back(new Chasseur (this));
+
+
 
 	vector<bool> tmpB;
 	vector<int> tmpy;
@@ -44,12 +51,6 @@ Labyrinthe::Labyrinthe (char* filename)
 	ifstream file(filename);
 	string linebuffer;
 
-	bool vu;
-	int tmpi = 0;
-	int y = 0;
-
-
-	// static vector<char*> data;
 
 	_data = new char*[1000];
 	for (int i = 0; i < 1000; ++i){
@@ -63,7 +64,7 @@ Labyrinthe::Labyrinthe (char* filename)
 	while (file && getline(file, linebuffer)){
 
 		if(!start){
-			if(linebuffer.length()==0 || linebuffer[linebuffer.find_first_not_of(' ')] != '+'){
+			if(linebuffer[linebuffer.find_first_not_of(' ')] != '+'){
 				continue;
 			}else{
 				start = true;
@@ -98,71 +99,94 @@ Labyrinthe::Labyrinthe (char* filename)
 
 
 			switch(cstr[i]) {
-				case '-' : _data[y][i] = 1;
-									 // tmpvec.push_back(1);
-									 break;
 
-				case '|' : _data[y][i] = 1;
-									 // tmpvec.push_back(1);
-									 break;
+				case ' ' : {
+					vu = false;
+					tmpB[i] = false;
+					break;
+				}
 
-    		case '+' : vu = true;
-									 tmpB[i] = true;
-									 tmpi = i;
-									 tmpy[i] = y;
-									 _data[y][i] = 1;
-									 // tmpvec.push_back(1);
-									 break;
+				case '-' : {
+					_data[y][i] = 1;
+					break;
+				}
 
-  			case ' ' : vu = false;
-									 tmpB[i] = false;
-									 // tmpvec.push_back(EMPTY);
-									 break;
+				case '|' : {
+					_data[y][i] = 1;
+					break;
+				}
 
-				case 'T' : _treasor._x = y;
-									 _treasor._y = i;
-									 _data[y][i] = 1;
-									 // tmpvec.push_back(1);
-									 break;
 
-				case 'C' : chasx = (i*10.)+5.;
-									 chasy = (y*10.)+5.;
-									 // tmpvec.push_back(EMPTY);
-									 break;
+    		case '+' : {
+					vu = true;
+					tmpB[i] = true;
+					tmpi = i;
+					tmpy[i] = y;
+					_data[y][i] = 1;
+					break;
+				}
+
+			 case 'x' : {
+			 	 Box tmpbox = {y,i,0};
+				 box.push_back(tmpbox);
+				 _nboxes++;
+				 _data[y][i] = 1;
+				 break;
+			}
+
+				case 'T' : {
+					_treasor._x = y;
+					_treasor._y = i;
+					_data[y][i] = 1;
+					break;
+				}
+
+				case 'C' : {
+					chasx = y*scale+(scale/2);
+					chasy = i*scale+(scale/2);
+					break;
+				}
+
+
+				case 'G' : {
+					Mover* tmpmove = new Gardien (this, "Marvin");
+					tmpmove -> _x = y*scale+(scale/2);
+					tmpmove -> _y = i*scale+(scale/2);
+					guards.push_back(tmpmove);
+					_nguards++;
+					_data[y][i] = 1;
+					break;
+				}
+
+				default:
+				 				 break;
 
 			}
 
 		}
-		// data.push_back(tmpvec.data());
 		y++;
 	}
 
-
 	lab_h = h;
 	lab_w = w;
-
-	// _data = new char*[lab_w];
-	// for (int i = 0; i < lab_w; ++i){
-	// 	_data[i] = new char[lab_h];
-	// 	for (int j = 0; j < lab_h; ++j) {
-	// 		if (i == 0 || i == lab_w-1 || j == 0 || j == lab_h-1)
-	// 			_data [i][j] = 1;
-	// 		else
-	// 			_data [i][j] = EMPTY;
-	// 	}
-	// }
-
-	// _data = data.data();
 	_walls = wall.data();
 	_npicts = 0;
 	_picts = new Wall [0];
-	_nboxes = 0;
-	_boxes = new Box [0];
-	//_data [_treasor._x][_treasor._y] = 1;
-	_nguards = 0;
-	_guards = new Mover* [_nguards];
-	_guards [0] = new Chasseur (this);
-	_guards [0] -> _x = chasx;
-	_guards [0] -> _y = chasy;
+	_boxes = box.data();
+	_guards = guards.data();
+	_guards[0] -> _x = chasx;
+	_guards[0] -> _y = chasy;
+
+	static Wall affiche [] = {
+		{ 4, 0, 6, 0, 0 },		// premi�re affiche.
+		{ 8, 0, 10, 0, 0 },		// autre affiche.
+	};
+
+	_npicts = 2;
+	_picts = affiche;
+
+	// char	tmp [128];
+	// sprintf (tmp, "%s/%s", texture_dir, "voiture.jpg");
+	// _picts [1]._ntex = wall_texture (tmp);
 
 }
