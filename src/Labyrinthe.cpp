@@ -1,6 +1,19 @@
 #include "Labyrinthe.h"
 #include "Chasseur.h"
 #include "Gardien.h"
+#include <stdio.h>
+#include <string.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
+
+
+
+using namespace std;
+
+
+
 
 Sound*	Chasseur::_hunter_fire;	// bruit de l'arme du chasseur.
 Sound*	Chasseur::_hunter_hit;	// cri du chasseur touché.
@@ -11,30 +24,110 @@ Environnement* Environnement::init (char* filename)
 	return new Labyrinthe (filename);
 }
 
+
 Labyrinthe::Labyrinthe (char* filename)
 {
-	_walls = new Wall [1];
-	_nwall = 1;
-	_walls[0] = {0, 0, 0, 10, 0};
 
-	_picts = new Wall [1];
+
+ 	int w = 0;
+	int h = 0;
+	float chasx = 0.;
+	float chasy = 0.;
+	_nwall = 0;
+	static vector<Wall> wall;
+	bool tmpB[1000];
+	tmpB[0] = 0;
+	int  tmpy[1000];
+
+	// vector<bool> tmpB;
+	// vector<int> tmpy;
+	// tmpB.push_back(false);
+	// tmpy.push_back(0);
+
+	ifstream file(filename);
+	string linebuffer;
+
+	bool vu;
+	int tmpi = 0;
+	int y = 0;
+
+	while (file && getline(file, linebuffer)){
+		w = max(w,(int)linebuffer.length()-1);
+		h++;
+		const char *cstr = linebuffer.c_str();
+		vu = false;
+		for (int i = 0; i < (int)strlen(cstr); i++) {
+
+			// if(i==sizeof(tmpB)/sizeof(tmpB[0])){
+			// 		tmpB.push_back(false);
+			// 		tmpy.push_back(0);
+			// }
+
+			if (vu && cstr[i] == '+') {
+				cout << tmpi << " " << y << " " << i << " " << y << '\n';
+				Wall tmp = {tmpi,y,i,y,0};
+				wall.push_back(tmp);
+				_nwall++;
+			}
+
+			if (tmpB[i] && cstr[i] == '+') {
+				cout << i << " " << tmpy[i] << " " << i << " " << y << '\n';
+				Wall tmp = {i,tmpy[i],i,y,0};
+				wall.push_back(tmp);
+				_nwall++;
+			}
+
+
+			switch(cstr[i]) {
+    		case '+' : vu = true;
+									 tmpB[i] = true;
+									 tmpi = i;
+									 tmpy[i] = y;
+									 break;
+
+  			case ' ' : vu = false;
+									 tmpB[i] = false;
+									 break;
+
+				case 'x' : _treasor._x = i;
+									 _treasor._y = y;
+									 break;
+
+				case 'C' : chasx = (i*10.)+5.;
+									 chasy = (y*10.)+5.;
+									 break;
+			}
+
+		}
+		y++;
+	}
+
+
+	lab_h = h;
+	lab_w = w;
+
+	_data = new char*[lab_w];
+	for (int i = 0; i < lab_w; ++i){
+		_data[i] = new char[lab_h];
+		for (int j = 0; j < lab_h; ++j) {
+			if (i == 0 || i == lab_w-1 || j == 0 || j == lab_h-1)
+				_data [i][j] = 1;
+			else
+				_data [i][j] = EMPTY;
+		}
+	}
+
+	_walls = wall.data();
+
 	_npicts = 0;
-	_picts[0] = _walls[0];
+	_picts = new Wall [0];
+	_nboxes = 0;
+	_boxes = new Box [0];
+	_data [_treasor._x][_treasor._y] = 1;
+	_nguards = 0;
+	_guards = new Mover* [_nguards];
+	_guards [0] = new Chasseur (this);
+	_guards [0] -> _x = chasx;
+	_guards [0] -> _y = chasy;
 
-	_boxes = new Box [1];		// les caisses.
-	_nboxes = 1;	// leur nombre.
-	_boxes[0] = {0, 0, 0};
-
-	_treasor._x = _treasor._y = 0;	// le trésor.
-
-	_guards = new Mover* [1];	// les gardes (tableau de pointeurs de gardiens).
-	_guards[0] = new Chasseur(this);
-	_nguards = 1;
-}
-
-int Labyrinthe::width () { return 1;}	// retourne la largeur du labyrinthe.
-int Labyrinthe::height () { return 10;}	// retourne la longueur du labyrinthe.
-char Labyrinthe::data (int i, int j)
-{
-		return 0;
 }
