@@ -58,13 +58,24 @@ Labyrinthe::Labyrinthe (char* filename)
 			_data [i][j] = EMPTY;
 	}
 
+	bool start = false;
+
 	while (file && getline(file, linebuffer)){
+
+		if(!start){
+			if(linebuffer.length()==0 || linebuffer[linebuffer.find_first_not_of(' ')] != '+'){
+				continue;
+			}else{
+				start = true;
+			}
+		}
 		// vector<char> tmpvec;
 		h = max(h,(int)linebuffer.length());
 		w++;
 		const char *cstr = linebuffer.c_str();
 		vu = false;
 		for (int i = 0; i < (int)strlen(cstr); i++) {
+			if(cstr[i] == '#')break;
 
 			if(i+2>(int)(sizeof(tmpB)/sizeof(tmpB[0]))){
 					tmpB.push_back(false);
