@@ -32,15 +32,13 @@ Labyrinthe::Labyrinthe (char* filename)
 	float chasx = 0.;
 	float chasy = 0.;
 
+
 	_nwall = 0;
 	_nboxes = 0;
 	_nguards = 1;
+	_npicts = 0;
 
-	static vector<Wall> wall;
-	static vector<Box> box;
-	static vector<Mover*> guards;
 	guards.push_back(new Chasseur (this));
-
 
 
 	vector<bool> tmpB;
@@ -52,25 +50,26 @@ Labyrinthe::Labyrinthe (char* filename)
 	string linebuffer;
 
 
-	_data = new char*[1000];
-	for (int i = 0; i < 1000; ++i){
-		_data[i] = new char[1000];
-		for (int j = 0; j < 1000; ++j)
-			_data [i][j] = EMPTY;
-	}
-
 	bool start = false;
 
 	while (file && getline(file, linebuffer)){
-
+		if(linebuffer[linebuffer.find_first_not_of(' ')] == '#' ||
+		 	 linebuffer.length() == 0) continue;
 		if(!start){
 			if(linebuffer[linebuffer.find_first_not_of(' ')] != '+'){
+
+				stringstream ss(linebuffer);
+				string item;
+				getline(ss, item, ' ');
+				char key = item[0];
+				getline(ss, item, ' ');
+				pic[key] = item;
 				continue;
 			}else{
 				start = true;
 			}
 		}
-		// vector<char> tmpvec;
+		vector<char> tmpvec;
 		h = max(h,(int)linebuffer.length());
 		w++;
 		const char *cstr = linebuffer.c_str();
@@ -84,14 +83,12 @@ Labyrinthe::Labyrinthe (char* filename)
 			}
 
 			if (vu && cstr[i] == '+') {
-				// cout << tmpi << " " << y << " " << i << " " << y << '\n';
 				Wall tmp = {y,tmpi,y,i,0};
 				wall.push_back(tmp);
 				_nwall++;
 			}
 
 			if (tmpB[i] && cstr[i] == '+') {
-				// cout << i << " " << tmpy[i] << " " << i << " " << y << '\n';
 				Wall tmp = {tmpy[i],i,y,i,0};
 				wall.push_back(tmp);
 				_nwall++;
@@ -103,16 +100,17 @@ Labyrinthe::Labyrinthe (char* filename)
 				case ' ' : {
 					vu = false;
 					tmpB[i] = false;
+					tmpvec.push_back(EMPTY);
 					break;
 				}
 
 				case '-' : {
-					_data[y][i] = 1;
+					tmpvec.push_back(1);
 					break;
 				}
 
 				case '|' : {
-					_data[y][i] = 1;
+					tmpvec.push_back(1);
 					break;
 				}
 
@@ -122,7 +120,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpB[i] = true;
 					tmpi = i;
 					tmpy[i] = y;
-					_data[y][i] = 1;
+					tmpvec.push_back(1);
 					break;
 				}
 
@@ -130,20 +128,21 @@ Labyrinthe::Labyrinthe (char* filename)
 			 	 Box tmpbox = {y,i,0};
 				 box.push_back(tmpbox);
 				 _nboxes++;
-				 _data[y][i] = 1;
+				 tmpvec.push_back(1);
 				 break;
 			}
 
 				case 'T' : {
 					_treasor._x = y;
 					_treasor._y = i;
-					_data[y][i] = 1;
+					tmpvec.push_back(1);
 					break;
 				}
 
 				case 'C' : {
 					chasx = y*scale+(scale/2);
 					chasy = i*scale+(scale/2);
+					tmpvec.push_back(EMPTY);
 					break;
 				}
 
@@ -154,18 +153,27 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpmove -> _y = i*scale+(scale/2);
 					guards.push_back(tmpmove);
 					_nguards++;
-					_data[y][i] = 1;
+					tmpvec.push_back(1);
 					break;
 				}
 
 				default:
-				 				 break;
+					Wall tmpwall = {y,i,y,i+6,0};
+					char	tmp [128];
+					sprintf (tmp, "%s/%s", texture_dir, pic[cstr[i]].c_str());
+					tmpwall._ntex = wall_texture(tmp);
+					affiche.push_back(tmpwall);
+					_npicts++;
+					tmpvec.push_back(1);
+				 	break;
 
 			}
 
 		}
+		_data.push_back(tmpvec);
 		y++;
 	}
+
 
 	lab_h = h;
 	lab_w = w;
@@ -176,17 +184,6 @@ Labyrinthe::Labyrinthe (char* filename)
 	_guards = guards.data();
 	_guards[0] -> _x = chasx;
 	_guards[0] -> _y = chasy;
-
-	static Wall affiche [] = {
-		{ 4, 0, 6, 0, 0 },		// premi�re affiche.
-		{ 8, 0, 10, 0, 0 },		// autre affiche.
-	};
-
-	_npicts = 2;
-	_picts = affiche;
-
-	// char	tmp [128];
-	// sprintf (tmp, "%s/%s", texture_dir, "voiture.jpg");
-	// _picts [1]._ntex = wall_texture (tmp);
+	_picts = affiche.data();
 
 }

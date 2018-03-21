@@ -1,6 +1,9 @@
 #ifndef LABYRINTHE_H
 #define LABYRINTHE_H
 
+#include <vector>
+#include <map>
+#include <string>
 #include "Environnement.h"
 
 
@@ -8,7 +11,12 @@ class Labyrinthe : public Environnement {
 private:
 	int lab_w;
 	int lab_h;
-	char**	_data;
+	std::vector<Wall> wall;
+	std::vector<Box> box;
+	std::vector<Mover*> guards;
+	std::map<char, std::string> pic;
+	std::vector<std::vector<char> > _data;
+	std::vector<Wall> affiche;
 
 public:
 	Labyrinthe (char*);
