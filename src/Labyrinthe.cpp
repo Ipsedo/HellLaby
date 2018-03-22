@@ -27,6 +27,7 @@ Labyrinthe::Labyrinthe (char* filename)
  	int w = 0;
 	int h = 0;
 	bool vu;
+	bool vupic;
 	int tmpi = 0;
 	int y = 0;
 	float chasx = 0.;
@@ -74,6 +75,7 @@ Labyrinthe::Labyrinthe (char* filename)
 		w++;
 		const char *cstr = linebuffer.c_str();
 		vu = false;
+		vupic = false;
 		for (int i = 0; i < (int)strlen(cstr); i++) {
 			if(cstr[i] == '#')break;
 
@@ -99,23 +101,27 @@ Labyrinthe::Labyrinthe (char* filename)
 
 				case ' ' : {
 					vu = false;
+					vupic = false;
 					tmpB[i] = false;
 					tmpvec.push_back(EMPTY);
 					break;
 				}
 
 				case '-' : {
+					vupic = true;
 					tmpvec.push_back(1);
 					break;
 				}
 
 				case '|' : {
+					vupic = false;
 					tmpvec.push_back(1);
 					break;
 				}
 
 
     		case '+' : {
+					vupic = true;
 					vu = true;
 					tmpB[i] = true;
 					tmpi = i;
@@ -125,6 +131,7 @@ Labyrinthe::Labyrinthe (char* filename)
 				}
 
 			 case 'x' : {
+				 vupic = false;
 			 	 Box tmpbox = {y,i,0};
 				 box.push_back(tmpbox);
 				 _nboxes++;
@@ -133,6 +140,7 @@ Labyrinthe::Labyrinthe (char* filename)
 			}
 
 				case 'T' : {
+					vupic = false;
 					_treasor._x = y;
 					_treasor._y = i;
 					tmpvec.push_back(1);
@@ -140,6 +148,7 @@ Labyrinthe::Labyrinthe (char* filename)
 				}
 
 				case 'C' : {
+					vupic = false;
 					chasx = y*scale+(scale/2);
 					chasy = i*scale+(scale/2);
 					tmpvec.push_back(EMPTY);
@@ -148,6 +157,7 @@ Labyrinthe::Labyrinthe (char* filename)
 
 
 				case 'G' : {
+					vupic = false;
 					Mover* tmpmove = new Gardien (this, "Marvin");
 					tmpmove -> _x = y*scale+(scale/2);
 					tmpmove -> _y = i*scale+(scale/2);
@@ -158,7 +168,13 @@ Labyrinthe::Labyrinthe (char* filename)
 				}
 
 				default:
-					Wall tmpwall = {y,i,y,i+6,0};
+					Wall tmpwall;
+					if (vupic) {
+						tmpwall = {y,i,y,i+2,0};
+					}else{
+						tmpwall = {y,i,y+2,i,0};
+					}
+					vupic = true;
 					char	tmp [128];
 					sprintf (tmp, "%s/%s", texture_dir, pic[cstr[i]].c_str());
 					tmpwall._ntex = wall_texture(tmp);
@@ -178,12 +194,11 @@ Labyrinthe::Labyrinthe (char* filename)
 	lab_h = h;
 	lab_w = w;
 	_walls = wall.data();
-	_npicts = 0;
-	_picts = new Wall [0];
 	_boxes = box.data();
 	_guards = guards.data();
 	_guards[0] -> _x = chasx;
 	_guards[0] -> _y = chasy;
 	_picts = affiche.data();
+
 
 }
