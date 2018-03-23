@@ -31,10 +31,12 @@ set_source_files_properties( ${OBJS} PROPERTIES
 # Building object files
 add_library( Labyrinthe OBJECT "src/Labyrinthe.cpp" )
 add_library( Chasseur   OBJECT "src/Chasseur.cpp" )
+add_library( Gardien	OBJECT "src/Gardien.cpp")
 
 # Final executable
 add_executable(cstrike
   ${OBJS}
   $<TARGET_OBJECTS:Labyrinthe>
   $<TARGET_OBJECTS:Chasseur>
+  $<TARGET_OBJECTS:Gardien>
 )
