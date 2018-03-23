@@ -7,17 +7,17 @@ class Labyrinthe;
 
 class Gardien : public Mover {
 public:
-	Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele)
-	{}
+	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
+	{}*/
 
 	// mon gardien pense très mal!
-	void update (void) {};
+	void update (void);// {};
 	// et ne bouge pas!
-	bool move (double dx, double dy) { return false; }
+	bool move (double dx, double dy);// { return false; }
 	// ne sait pas tirer sur un ennemi.
-	void fire (int angle_vertical) {}
+	void fire (int angle_vertical);// {}
 	// quand a faire bouger la boule de feu...
-	bool process_fireball (float dx, float dy) { return false; }
+	bool process_fireball (float dx, float dy);// { return false; }
 };
 
 #endif
