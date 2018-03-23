@@ -13,7 +13,7 @@ void Gardien::update (void) {
 	// double dx = (double) 2. * std::rand() / RAND_MAX - 1.;
 	// double dy = (double) 2. * std::rand() / RAND_MAX - 1.;
 	// _angle++;
-	double a = 2. * M_PI * _angle / 360.;
+	double a = 2. * M_PI * _angle / 360. + 90.;
 	double dx = cos(a);
 	double dy = sin(a);
 
