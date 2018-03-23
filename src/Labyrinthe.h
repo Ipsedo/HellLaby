@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include "Environnement.h"
+#include "Mover.h"
 
 
 class Labyrinthe : public Environnement {
@@ -24,7 +25,17 @@ public:
 	int height () { return lab_h;}	// retourne la longueur du labyrinthe.
 	char data (int i, int j)
 	{
-		return _data [i][j];
+		int isFull = _data [i][j];
+		if (isFull == FULL)
+			return isFull;
+		for (auto m : guards) {
+			int x = m->_x / scale;
+			int y = m->_y / scale;
+			if (x == i && y == j) {
+				return FULL;
+			}
+		}
+		return EMPTY;
 	}	// retourne la case (i, j).
 };
 
