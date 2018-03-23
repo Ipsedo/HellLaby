@@ -6,6 +6,7 @@
  */
 
 #define EMPTY	0		// case vide (ou on peut marcher!)
+#define FULL    1
 
 extern void message (const char* format, ...);
 class Mover;
