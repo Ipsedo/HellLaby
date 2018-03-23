@@ -32,6 +32,7 @@ set_source_files_properties( ${OBJS} PROPERTIES
 add_library( Labyrinthe OBJECT "src/Labyrinthe.cpp" )
 add_library( Chasseur   OBJECT "src/Chasseur.cpp" )
 add_library( Gardien	OBJECT "src/Gardien.cpp")
+add_library( Dijkstra	OBJECT "src/Dijkstra.cpp")
 
 # Final executable
 add_executable(cstrike
@@ -39,4 +40,5 @@ add_executable(cstrike
   $<TARGET_OBJECTS:Labyrinthe>
   $<TARGET_OBJECTS:Chasseur>
   $<TARGET_OBJECTS:Gardien>
+  $<TARGET_OBJECTS:Dijkstra>
 )

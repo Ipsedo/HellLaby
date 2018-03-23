@@ -1,6 +1,7 @@
 #include "Labyrinthe.h"
 #include "Chasseur.h"
 #include "Gardien.h"
+#include "Dijkstra.h"
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
@@ -23,6 +24,7 @@ Environnement* Environnement::init (char* filename)
 Labyrinthe::Labyrinthe (char* filename)
 {
 
+	dijkstra(1);
 
 	bool vu;
 	int tmpi = 0;
