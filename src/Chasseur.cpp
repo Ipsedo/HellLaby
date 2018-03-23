@@ -29,7 +29,7 @@ Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 }
 
 /*
- *	Fait bouger la boule de feu (ceci est une exemple, à vous de traiter les collisions spécifiques...)
+ *	Fait bouger la boule de feu (ceci est une exemple, ï¿½ vous de traiter les collisions spï¿½cifiques...)
  */
 
 bool Chasseur::process_fireball (float dx, float dy)
@@ -64,5 +64,5 @@ void Chasseur::fire (int angle_vertical)
 	message ("Woooshh...");
 	_hunter_fire -> play ();
 	_fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-				 /* angles de visée */ angle_vertical, _angle);
+				 /* angles de visï¿½e */ angle_vertical, _angle);
 }

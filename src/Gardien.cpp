@@ -9,18 +9,22 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 }
 
 void Gardien::update (void) {
-	double dx = (double) 0.5 * std::rand() / RAND_MAX - 0.25;
-	double dy = (double) 0.5 * std::rand() / RAND_MAX - 0.25;
+	double dx = (double ) (std::rand()*2. / RAND_MAX)-1.;
+	double dy = (double ) (std::rand()*2. / RAND_MAX)-1.;
 	this->move(dx, dy);
 }
 
 bool Gardien::move (double dx, double dy) {
-	double x = _x + dx * (double) _l->scale;
-	double y = _y + dy * (double) _l->scale;
+	double x = _x + dx;
+	double y = _y + dy;
+
+	int OposX = _x / _l->scale;
+	int OposY = _y / _l->scale;
+
 	int posX = x / _l->scale;
 	int posY = y / _l->scale;
 	std::cout << posX << " " << posY << std::endl;
-	if (_l->data(posX, posY) == 1)
+	if ((posX != OposX || posY != OposY) && _l->data(posX, posY) == 1)
 		return false;
 	_x = x;
 	_y = y;
