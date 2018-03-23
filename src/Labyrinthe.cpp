@@ -161,7 +161,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpmove -> _y = i*scale+(scale/2);
 					guards.push_back(tmpmove);
 					_nguards++;
-					tmpvec.push_back(FULL);
+					tmpvec.push_back(EMPTY);
 					break;
 				}
 
