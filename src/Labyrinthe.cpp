@@ -106,13 +106,13 @@ Labyrinthe::Labyrinthe (char* filename)
 
 				case '-' : {
 					vu = true;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 					break;
 				}
 
 				case '|' : {
 					vu = false;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 					break;
 				}
 
@@ -122,7 +122,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpB[i] = true;
 					tmpi = i;
 					tmpy[i] = y;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 					break;
 				}
 
@@ -131,7 +131,7 @@ Labyrinthe::Labyrinthe (char* filename)
 			 	 Box tmpbox = {y,i,0};
 				 box.push_back(tmpbox);
 				 _nboxes++;
-				 tmpvec.push_back(1);
+				 tmpvec.push_back(FULL);
 				 break;
 			}
 
@@ -139,7 +139,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					vu = false;
 					_treasor._x = y;
 					_treasor._y = i;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 					break;
 				}
 
@@ -159,7 +159,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpmove -> _y = i*scale+(scale/2);
 					guards.push_back(tmpmove);
 					_nguards++;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 					break;
 				}
 
@@ -176,7 +176,7 @@ Labyrinthe::Labyrinthe (char* filename)
 					tmpwall._ntex = wall_texture(tmp);
 					affiche.push_back(tmpwall);
 					_npicts++;
-					tmpvec.push_back(1);
+					tmpvec.push_back(FULL);
 				 	break;
 
 			}
