@@ -24,14 +24,13 @@ Labyrinthe::Labyrinthe (char* filename)
 {
 
 
- 	int w = 0;
-	int h = 0;
 	bool vu;
-	bool vupic;
 	int tmpi = 0;
 	int y = 0;
 	float chasx = 0.;
 	float chasy = 0.;
+	lab_h = 0;
+	lab_w = 0;
 
 
 	_nwall = 0;
@@ -71,11 +70,10 @@ Labyrinthe::Labyrinthe (char* filename)
 			}
 		}
 		vector<char> tmpvec;
-		h = max(h,(int)linebuffer.length());
-		w++;
+		lab_h = max(lab_h,(int)linebuffer.length());
+		lab_w++;
 		const char *cstr = linebuffer.c_str();
 		vu = false;
-		vupic = false;
 		for (int i = 0; i < (int)strlen(cstr); i++) {
 			if(cstr[i] == '#')break;
 
@@ -101,27 +99,25 @@ Labyrinthe::Labyrinthe (char* filename)
 
 				case ' ' : {
 					vu = false;
-					vupic = false;
 					tmpB[i] = false;
 					tmpvec.push_back(EMPTY);
 					break;
 				}
 
 				case '-' : {
-					vupic = true;
+					vu = true;
 					tmpvec.push_back(1);
 					break;
 				}
 
 				case '|' : {
-					vupic = false;
+					vu = false;
 					tmpvec.push_back(1);
 					break;
 				}
 
 
     		case '+' : {
-					vupic = true;
 					vu = true;
 					tmpB[i] = true;
 					tmpi = i;
@@ -131,7 +127,7 @@ Labyrinthe::Labyrinthe (char* filename)
 				}
 
 			 case 'x' : {
-				 vupic = false;
+				 vu = false;
 			 	 Box tmpbox = {y,i,0};
 				 box.push_back(tmpbox);
 				 _nboxes++;
@@ -140,7 +136,7 @@ Labyrinthe::Labyrinthe (char* filename)
 			}
 
 				case 'T' : {
-					vupic = false;
+					vu = false;
 					_treasor._x = y;
 					_treasor._y = i;
 					tmpvec.push_back(1);
@@ -148,7 +144,7 @@ Labyrinthe::Labyrinthe (char* filename)
 				}
 
 				case 'C' : {
-					vupic = false;
+					vu = false;
 					chasx = y*scale+(scale/2);
 					chasy = i*scale+(scale/2);
 					tmpvec.push_back(EMPTY);
@@ -157,7 +153,7 @@ Labyrinthe::Labyrinthe (char* filename)
 
 
 				case 'G' : {
-					vupic = false;
+					vu = false;
 					Mover* tmpmove = new Gardien (this, "Marvin");
 					tmpmove -> _x = y*scale+(scale/2);
 					tmpmove -> _y = i*scale+(scale/2);
@@ -169,12 +165,12 @@ Labyrinthe::Labyrinthe (char* filename)
 
 				default:
 					Wall tmpwall;
-					if (vupic) {
-						tmpwall = {y,i,y,i+2,0};
+					if (vu) {
+						tmpwall = {y,i,y,i+1,0};
 					}else{
-						tmpwall = {y,i,y+2,i,0};
+						tmpwall = {y,i,y+1,i,0};
 					}
-					vupic = true;
+
 					char	tmp [128];
 					sprintf (tmp, "%s/%s", texture_dir, pic[cstr[i]].c_str());
 					tmpwall._ntex = wall_texture(tmp);
@@ -191,8 +187,6 @@ Labyrinthe::Labyrinthe (char* filename)
 	}
 
 
-	lab_h = h;
-	lab_w = w;
 	_walls = wall.data();
 	_boxes = box.data();
 	_guards = guards.data();
