@@ -6,14 +6,23 @@
 
 bool Chasseur::move_aux (double dx, double dy)
 {
-	if (EMPTY == _l -> data ((int)((_x + dx) / Environnement::scale),
+	/*if (EMPTY == _l -> data ((int)((_x + dx) / Environnement::scale),
 							 (int)((_y + dy) / Environnement::scale)))
 	{
 		_x += dx;
 		_y += dy;
 		return true;
-	}
-	return false;
+	}*/
+	int posX = (_x + dx) / Environnement::scale;
+	int posY = (_y + dy) / Environnement::scale;
+	int oldX = _x / Environnement::scale;
+	int oldY = _y / Environnement::scale;
+	if ((posX != oldX || posY != oldY) && _l->data(posX, posY) == FULL)
+		return false;
+
+	_x += dx;
+	_y += dy;
+	return true;
 }
 
 /*
