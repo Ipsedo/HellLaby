@@ -1,4 +1,4 @@
-#include "Labyrinthe.h"
+	#include "Labyrinthe.h"
 #include "Chasseur.h"
 #include "Gardien.h"
 #include "Dijkstra.h"
@@ -23,8 +23,6 @@ Environnement* Environnement::init (char* filename)
 
 Labyrinthe::Labyrinthe (char* filename)
 {
-
-	dijkstra(1);
 
 	bool vu;
 	int tmpi = 0;
@@ -195,6 +193,8 @@ Labyrinthe::Labyrinthe (char* filename)
 	_guards[0] -> _x = chasx;
 	_guards[0] -> _y = chasy;
 	_picts = affiche.data();
+
+
 
 
 }

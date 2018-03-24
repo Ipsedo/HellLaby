@@ -1,4 +1,7 @@
 #ifndef DIJKSTRA_H
 #define DIJKSTRA_H
-int dijkstra(int i);
+  #include "Mover.h"
+  #include "Labyrinthe.h"
+  #include <tuple>
+  std::pair<int,int> dijkstra(Labyrinthe* l, Mover* m);
 #endif

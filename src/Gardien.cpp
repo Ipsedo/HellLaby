@@ -1,4 +1,5 @@
 #include "Gardien.h"
+#include "Dijkstra.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -6,6 +7,7 @@
 #include <math.h>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
+	_l = l;
 	std::srand(std::time(nullptr));
 }
 
@@ -13,6 +15,9 @@ void Gardien::update (void) {
 	// double dx = (double) 2. * std::rand() / RAND_MAX - 1.;
 	// double dy = (double) 2. * std::rand() / RAND_MAX - 1.;
 	// _angle++;
+
+
+
 	double a = 2. * M_PI * _angle / 360. + 90.;
 	double dx = cos(a);
 	double dy = sin(a);
@@ -27,6 +32,12 @@ void Gardien::update (void) {
 		_angle = 360. * (double) std::rand() / RAND_MAX;
 	else
 		this->move(dx, dy);
+
+
+
+	//auto mo = dijkstra(_l,this);
+	// this->move(mo.first,mo.second);
+
 }
 
 bool Gardien::move (double dx, double dy) {

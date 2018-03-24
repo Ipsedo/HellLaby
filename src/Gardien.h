@@ -6,11 +6,13 @@
 class Labyrinthe;
 
 class Gardien : public Mover {
+private:
+	Labyrinthe *_l;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
 
-	// mon gardien pense très mal!
+	// mon gardien pense trï¿½s mal!
 	void update (void);// {};
 	// et ne bouge pas!
 	bool move (double dx, double dy);// { return false; }
