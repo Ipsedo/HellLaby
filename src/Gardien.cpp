@@ -60,10 +60,9 @@ bool Gardien::move (double dx, double dy) {
 		return false;
 	_x = x;
 	_y = y;*/
-	_x += dx;//*_l->scale;
-	_y += dy;//*_l->scale;
+	_x += dx;
+	_y += dy;
 
-	// std::cout << " pos : "<< _x << " " << _y << '\n';
 	return true;
 }
 

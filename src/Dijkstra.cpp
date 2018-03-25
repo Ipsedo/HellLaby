@@ -24,8 +24,6 @@ void Neighbors(vector<pair<int,int> > *v,set<pair<int,int> > *djaVu, Environneme
 
 pair<int,int> dijkstra(Environnement* l, Mover* m) {
 
-
-
   auto x = l->_treasor._x;
   auto y = l->_treasor._y;
 
@@ -50,8 +48,6 @@ pair<int,int> dijkstra(Environnement* l, Mover* m) {
       for (int j = -1; j < 2; j++) {
         auto p = make_pair(x+j,y+i);
         if ( l->data(x+j,y+i) == EMPTY && !(i==0 && j==0) && djaVu.find(p) == djaVu.end()) {
-          // std::cout << x << " - " << (int)(m->_x / l->scale) << " , " << y << " - " << (int)(m->_y / l->scale) <<  '\n';
-          // std::cout << "if " << (int) m->_x / l->scale << " == " << x+j << " && " << (int) m->_y / l->scale << " == " << y+i << '\n';
           if ( (int) m->_x / l->scale == x+j && (int) m->_y /l->scale == y+i )  {
             return make_pair(x - (int)(m->_x / l->scale) ,y - (int)(m->_y / l->scale));
           }
@@ -62,23 +58,4 @@ pair<int,int> dijkstra(Environnement* l, Mover* m) {
       }
     }
   }
-
-
-  // Neighbors(&neig, &djaVu, l, x, y);
-  // while (true) {
-  // // for (size_t i = 0; i < 100; i++) {
-  //
-  //   if (find(neig.begin(),neig.end(),make_pair((int) m -> _x / l->scale,(int) m -> _y /l->scale)) == neig.end()) {
-  //     x = neig[0].first;
-  //     y = neig[0].second;
-  //     neig.erase(neig.begin());
-  //     //if(neig.size() == 0) break;
-  //     Neighbors(&neig, &djaVu, l, x, y);
-  //   }else{
-  //     break;
-  //   }
-  // }
-  // pair<int,int> res = make_pair(neig[0].first - (int) m -> _x / l->scale, neig[0].second - (int) m -> _y /l->scale);
-  // return res;
-
 }
