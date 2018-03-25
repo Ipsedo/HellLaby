@@ -37,12 +37,13 @@ void Gardien::update (void) {
 
 
 
-		if( (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
-			auto a = dijkstra(_l,this);
-			dirx = a.first;
-			diry = a.second;
-		}
+
 		if(!dir){
+			if( (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
+				auto a = dijkstra(_l,this);
+				dirx = a.first;
+				diry = a.second;
+			}
 			move(dirx, diry);
 			if(dirx == 0 && diry == 0) dir = true;
 		}
