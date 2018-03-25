@@ -35,9 +35,9 @@ void Gardien::update (void) {
 	// if (0.01 > (double) std::rand() / RAND_MAX)
 	// 	fire(0.);
 
-		if(oldx != _x || oldy != _y){
-			oldx = _x;
-			oldy = _y;
+
+
+		if( (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
 			auto a = dijkstra(_l,this);
 			dirx = a.first;
 			diry = a.second;
@@ -59,8 +59,8 @@ bool Gardien::move (double dx, double dy) {
 		return false;
 	_x = x;
 	_y = y;*/
-	_x += dx*_l->scale;
-	_y += dy*_l->scale;
+	_x += dx;//*_l->scale;
+	_y += dy;//*_l->scale;
 
 	// std::cout << " pos : "<< _x << " " << _y << '\n';
 	return true;

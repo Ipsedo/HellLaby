@@ -37,7 +37,6 @@ pair<int,int> dijkstra(Environnement* l, Mover* m) {
   while (true) {
 
     if (neig.size() == 0)  {
-     // std::cout << "size 0" << '\n';
      return make_pair(0,0);
     }
 

@@ -8,8 +8,6 @@ class Labyrinthe;
 class Gardien : public Mover {
 private:
 	bool dir;
-	int oldx;
-	int oldy;
 	int dirx;
 	int diry;
 public:
