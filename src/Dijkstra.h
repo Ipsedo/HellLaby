@@ -3,5 +3,5 @@
   #include "Mover.h"
   #include "Labyrinthe.h"
   #include <tuple>
-  std::pair<int,int> dijkstra(Labyrinthe* l, Mover* m);
+  std::pair<int,int> dijkstra(Environnement* l, Mover* m);
 #endif

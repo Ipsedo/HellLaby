@@ -7,7 +7,11 @@ class Labyrinthe;
 
 class Gardien : public Mover {
 private:
-	Labyrinthe *_l;
+	bool dir;
+	int oldx;
+	int oldy;
+	int dirx;
+	int diry;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/

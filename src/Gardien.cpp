@@ -7,7 +7,7 @@
 #include <math.h>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
-	_l = l;
+	dir = false;
 	std::srand(std::time(nullptr));
 }
 
@@ -17,23 +17,35 @@ void Gardien::update (void) {
 	// _angle++;
 
 
+	//
+	// double a = 2. * M_PI * _angle / 360. + 90.;
+	// double dx = cos(a);
+	// double dy = sin(a);
+	//
+	// float x = _x + dx;
+	// float y = _y + dy;
+	// int oldX = _x / _l->scale;
+	// int oldY = _y / _l->scale;
+	// int posX = (int) x / _l->scale;
+	// int posY = (int) y / _l->scale;
+	// if ((oldX != posX || oldY != posY) && _l->data(posX, posY) == FULL)
+	// 	_angle = 360. * (double) std::rand() / RAND_MAX;
+	// else
+	// 	this->move(dx, dy);
+	// if (0.01 > (double) std::rand() / RAND_MAX)
+	// 	fire(0.);
 
-	double a = 2. * M_PI * _angle / 360. + 90.;
-	double dx = cos(a);
-	double dy = sin(a);
-
-	float x = _x + dx;
-	float y = _y + dy;
-	int oldX = _x / _l->scale;
-	int oldY = _y / _l->scale;
-	int posX = (int) x / _l->scale;
-	int posY = (int) y / _l->scale;
-	if ((oldX != posX || oldY != posY) && _l->data(posX, posY) == FULL)
-		_angle = 360. * (double) std::rand() / RAND_MAX;
-	else
-		this->move(dx, dy);
-	if (0.01 > (double) std::rand() / RAND_MAX)
-		fire(0.);
+		if(oldx != _x || oldy != _y){
+			oldx = _x;
+			oldy = _y;
+			auto a = dijkstra(_l,this);
+			dirx = a.first;
+			diry = a.second;
+		}
+		if(!dir){
+			move(dirx, diry);
+			if(dirx == 0 && diry == 0) dir = true;
+		}
 }
 
 bool Gardien::move (double dx, double dy) {
@@ -47,8 +59,10 @@ bool Gardien::move (double dx, double dy) {
 		return false;
 	_x = x;
 	_y = y;*/
-	_x += dx;
-	_y += dy;
+	_x += dx*_l->scale;
+	_y += dy*_l->scale;
+
+	// std::cout << " pos : "<< _x << " " << _y << '\n';
 	return true;
 }
 
