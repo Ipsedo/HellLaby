@@ -8,12 +8,13 @@ class Labyrinthe;
 class Gardien : public Mover {
 private:
 	bool dir;
-	int dirx;
-	int diry;
+	double dirx;
+	double diry;
 	bool isProtector;
 	int downSeuil;
 	int upSeuil;
 	int cpt;
+	bool haveHitWall;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/

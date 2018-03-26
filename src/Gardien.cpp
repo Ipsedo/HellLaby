@@ -6,6 +6,7 @@
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
+	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
 	cpt = (int) 99.f * (float) std::rand() / RAND_MAX;
 	downSeuil = 2;
@@ -58,24 +59,13 @@ void Gardien::update (void) {
 			dirx = a.first;
 			diry = a.second;
 			if(dirx == 0 && diry == 0) dir = true;
-		} else if (willUpdate) {
-			// Le gardien est en mode recherche
-			// TODO stopper le mouvement si on voit le chasseur
-			float randX = (float) std::rand() / RAND_MAX;
-			float randY = (float) std::rand() / RAND_MAX;
-			if (randX < 0.33f)
-				dirx = 1;
-			else if (randX < 0.66f)
-				dirx = 0;
-			else
-				dirx = -1;
-
-			if (randY < 0.33f)
-				diry = 1;
-			else if (randY < 0.66f)
-				diry = 0;
-			else
-				diry = -1;
+		} else if (!isProtector && haveHitWall) {
+			// TODO faire comportement quand guardien "voit" chasseur
+			double randAngle = 2. * M_PI * (double) std::rand() / RAND_MAX;
+			dirx = cos(randAngle);
+			diry = sin(randAngle);
+			_angle = 360 * randAngle / (M_PI * 2.) - 90.;
+			haveHitWall = false;
 		}
 		move(dirx, diry);
 	}
@@ -88,8 +78,10 @@ bool Gardien::move (double dx, double dy) {
 	float y = _y + dy;
 	int posX = (int) x / _l->scale;
 	int posY = (int) y / _l->scale;
-	if (_l->data(posX, posY) == FULL)
+	if (_l->data(posX, posY) == FULL) {
+		haveHitWall = true;
 		return false;
+	}
 	_x = x;
 	_y = y;
 
