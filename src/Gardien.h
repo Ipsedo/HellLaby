@@ -11,8 +11,8 @@ private:
 	double dirx;
 	double diry;
 	bool isProtector;
-	int downSeuil;
-	int upSeuil;
+	float downSeuil;
+	float upSeuil;
 	int cpt;
 	bool haveHitWall;
 public:

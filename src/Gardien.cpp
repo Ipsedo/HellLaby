@@ -4,50 +4,27 @@
 #include <iostream>
 #include <math.h>
 
-Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
+Gardien::Gardien (Labyrinthe* l, const char* modele, int index) : Mover (120, 80, l, modele) {
 	dir = false;
 	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
 	cpt = (int) 99.f * (float) std::rand() / RAND_MAX;
-	downSeuil = _l->_nguards / 3;
-	upSeuil = _l->_nguards / 2;
+	downSeuil = 3.f;
+	upSeuil = 5.f;
 }
 
 void Gardien::update (void) {
-	// double dx = (double) 2. * std::rand() / RAND_MAX - 1.;
-	// double dy = (double) 2. * std::rand() / RAND_MAX - 1.;
-	// _angle++;
-
-
-	//
-	// double a = 2. * M_PI * _angle / 360. + 90.;
-	// double dx = cos(a);
-	// double dy = sin(a);
-	//
-	// float x = _x + dx;
-	// float y = _y + dy;
-	// int oldX = _x / _l->scale;
-	// int oldY = _y / _l->scale;
-	// int posX = (int) x / _l->scale;
-	// int posY = (int) y / _l->scale;
-	// if ((oldX != posX || oldY != posY) && _l->data(posX, posY) == FULL)
-	// 	_angle = 360. * (double) std::rand() / RAND_MAX;
-	// else
-	// 	this->move(dx, dy);
-	// if (0.01 > (double) std::rand() / RAND_MAX)
-	// 	fire(0.);
 	if (cpt == 0) {
-		int nbGuardProche = 0;
+		float score = 0.f;
 		for (int i = 1; i < _l->_nguards; i++) {
-			if (distDij(_l, _l->_guards[i]) < 30) {
-				nbGuardProche++;
-			}
+				score += distDij(_l, _l->_guards[i]);
 		}
-
-		if (nbGuardProche < downSeuil)
-			isProtector = true;
-		if (nbGuardProche > upSeuil)
+		score /= _l->_nguards;
+		score += 10.f * std::rand() / RAND_MAX; // ajout de 10pts de score random
+		if (score < downSeuil * _l->_nguards)
 			isProtector = false;
+		if (score > upSeuil * _l->_nguards)
+			isProtector = true;
 	}
 
 	if(!dir){
@@ -71,7 +48,7 @@ void Gardien::update (void) {
 		move(dirx, diry);
 	}
 	cpt++;
-	cpt %= 300;
+	cpt %= 100;
 }
 
 bool Gardien::move (double dx, double dy) {
