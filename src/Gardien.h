@@ -11,8 +11,8 @@ private:
 	int dirx;
 	int diry;
 	bool isProtector;
-	float downSeuil;
-	float upSeuil;
+	int downSeuil;
+	int upSeuil;
 	int cpt;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
