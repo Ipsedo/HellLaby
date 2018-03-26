@@ -53,10 +53,14 @@ void Gardien::update (void) {
 
 	if(!dir){
 		if(isProtector && (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
+			// Le gardien est en mode protection
+			// TODO stopper le mouvement si on est proche du trésor
 			auto a = dijkstra(_l,this);
 			dirx = a.first;
 			diry = a.second;
 		} else if ((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ) {
+			// Le gardien est en mode recherche
+			// TODO stopper le mouvement si on voit le chasseur
 			dirx = 2.f * std::rand() / RAND_MAX - 1.f;
 			diry = 2.f * std::rand() / RAND_MAX - 1.f;
 		}
