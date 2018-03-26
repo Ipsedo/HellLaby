@@ -4,6 +4,7 @@
 #include "Dijkstra.h"
 #include <stdio.h>
 #include <string.h>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -23,6 +24,8 @@ Environnement* Environnement::init (char* filename)
 
 Labyrinthe::Labyrinthe (char* filename)
 {
+
+	std::srand(std::time(nullptr));
 
 	bool vu;
 	int tmpi = 0;

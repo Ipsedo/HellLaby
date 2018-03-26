@@ -1,18 +1,15 @@
 #include "Gardien.h"
 #include "Dijkstra.h"
-
 #include <cstdlib>
-#include <ctime>
 #include <iostream>
 #include <math.h>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
-	std::srand(std::time(nullptr));
 	isProtector = true;
-	cpt = 99.f * std::rand() / RAND_MAX;
+	cpt = (int) 99.f * (float) std::rand() / RAND_MAX;
 	downSeuil = 10.f;
-	upSeuil = 20.f;
+	upSeuil = 30.f;
 }
 
 void Gardien::update (void) {
@@ -52,6 +49,7 @@ void Gardien::update (void) {
 	}
 
 	if(!dir){
+		std::cout << "yo" << std::endl;
 		if(isProtector && (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
 			// Le gardien est en mode protection
 			// TODO stopper le mouvement si on est proche du trésor
@@ -61,29 +59,27 @@ void Gardien::update (void) {
 		} else if ((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ) {
 			// Le gardien est en mode recherche
 			// TODO stopper le mouvement si on voit le chasseur
-			dirx = 2.f * std::rand() / RAND_MAX - 1.f;
-			diry = 2.f * std::rand() / RAND_MAX - 1.f;
+			dirx = (float) std::rand() / RAND_MAX < 0.5 ? -1 : 1;
+			diry = (float) std::rand() / RAND_MAX < 0.5 ? -1 : 1;
 		}
 		move(dirx, diry);
 		if(dirx == 0 && diry == 0) dir = true;
 	}
 	cpt++;
-	cpt = cpt < 100 ? cpt : 0;
+	cpt = cpt < 300 ? cpt : 0;
 }
 
 bool Gardien::move (double dx, double dy) {
-	/*float x = _x + dx;
+	float x = _x + dx;
 	float y = _y + dy;
 	int oldX = _x / _l->scale;
 	int oldY = _y / _l->scale;
 	int posX = (int) x / _l->scale;
 	int posY = (int) y / _l->scale;
 	if ((oldX != posX || oldY != posY) && _l->data(posX, posY) == FULL)
-	return false;
+		return false;
 	_x = x;
-	_y = y;*/
-	_x += dx;
-	_y += dy;
+	_y = y;
 
 	return true;
 }
