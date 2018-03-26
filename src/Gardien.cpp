@@ -9,8 +9,8 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
 	cpt = (int) 99.f * (float) std::rand() / RAND_MAX;
-	downSeuil = 2;
-	upSeuil = 3;
+	downSeuil = _l->_nguards / 3;
+	upSeuil = _l->_nguards / 2;
 }
 
 void Gardien::update (void) {
@@ -58,6 +58,7 @@ void Gardien::update (void) {
 			auto a = dijkstra(_l,this);
 			dirx = a.first;
 			diry = a.second;
+			_angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
 			if(dirx == 0 && diry == 0) dir = true;
 		} else if (!isProtector && haveHitWall) {
 			// TODO faire comportement quand guardien "voit" chasseur
