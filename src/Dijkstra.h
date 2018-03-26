@@ -4,4 +4,5 @@
   #include "Labyrinthe.h"
   #include <tuple>
   std::pair<int,int> dijkstra(Environnement* l, Mover* m);
+  int distDij(Environnement* l, Mover* m);
 #endif
