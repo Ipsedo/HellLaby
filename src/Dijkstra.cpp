@@ -9,18 +9,18 @@
 
 using namespace std;
 
-void Neighbors(vector<pair<int,int> > *v,set<pair<int,int> > *djaVu, Environnement* l, int x, int y) {
-  for (int i = -1; i < 2; i++) {
-    for (int j = -1; j < 2; j++) {
-      auto p = make_pair(x+j,y+i);
-      if ( l->data(x+j,y+i) == EMPTY && !(i==0 && j==0) && djaVu -> find(p) == djaVu -> end()) {
-        v -> push_back(p);
-        djaVu -> insert(p);
-
-      }
-    }
-  }
-}
+// void Neighbors(vector<pair<int,int> > *v,set<pair<int,int> > *djaVu, Environnement* l, int x, int y) {
+//   for (int i = -1; i < 2; i++) {
+//     for (int j = -1; j < 2; j++) {
+//       auto p = make_pair(x+j,y+i);
+//       if ( l->data(x+j,y+i) == EMPTY && !(i==0 && j==0) && djaVu -> find(p) == djaVu -> end()) {
+//         v -> push_back(p);
+//         djaVu -> insert(p);
+//
+//       }
+//     }
+//   }
+// }
 
 pair<int,int> dijkstra(Environnement* l, Mover* m) {
 
