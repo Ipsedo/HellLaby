@@ -9,6 +9,10 @@
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
 	std::srand(std::time(nullptr));
+	isProtector = true;
+	cpt = 99.f * std::rand() / RAND_MAX;
+	downSeuil = 10.f;
+	upSeuil = 20.f;
 }
 
 void Gardien::update (void) {
@@ -34,16 +38,30 @@ void Gardien::update (void) {
 	// 	this->move(dx, dy);
 	// if (0.01 > (double) std::rand() / RAND_MAX)
 	// 	fire(0.);
-
-		if(!dir){
-			if((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
-				auto a = dijkstra(_l,this);
-				dirx = a.first;
-				diry = a.second;
-			}
-			move(dirx, diry);
-			if(dirx == 0 && diry == 0) dir = true;
+	if (cpt == 0) {
+		float meanDist = 0.f;
+		for (int i = 1; i < _l->_nguards; i++) {
+			meanDist += distDij(_l, _l->_guards[i]);
 		}
+		meanDist /= (_l->_nguards - 1.f);
+
+		if (meanDist < downSeuil)
+			isProtector = true;
+		if (meanDist > upSeuil)
+			isProtector = false;
+	}
+
+	if(!dir){
+		if((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
+			auto a = dijkstra(_l,this);
+			dirx = a.first;
+			diry = a.second;
+		}
+		move(dirx, diry);
+		if(dirx == 0 && diry == 0) dir = true;
+	}
+	cpt++;
+	cpt = cpt < 100 ? cpt : 0;
 }
 
 bool Gardien::move (double dx, double dy) {
@@ -54,7 +72,7 @@ bool Gardien::move (double dx, double dy) {
 	int posX = (int) x / _l->scale;
 	int posY = (int) y / _l->scale;
 	if ((oldX != posX || oldY != posY) && _l->data(posX, posY) == FULL)
-		return false;
+	return false;
 	_x = x;
 	_y = y;*/
 	_x += dx;
@@ -74,7 +92,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 	float	dist2 = x*x + y*y;
 	// on bouge que dans le vide!
 	if (EMPTY == _l->data((int)((_fb->get_x() + dx) / Environnement::scale),
-							 (int)((_fb->get_y() + dy) / Environnement::scale)))
+	(int)((_fb->get_y() + dy) / Environnement::scale)))
 	{
 		message ("[MOB] Woooshh ..... %d", (int) dist2);
 		// il y a la place.
