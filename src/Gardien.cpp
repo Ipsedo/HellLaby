@@ -52,10 +52,13 @@ void Gardien::update (void) {
 	}
 
 	if(!dir){
-		if((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
+		if(isProtector && (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
 			auto a = dijkstra(_l,this);
 			dirx = a.first;
 			diry = a.second;
+		} else if ((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ) {
+			dirx = 2.f * std::rand() / RAND_MAX - 1.f;
+			diry = 2.f * std::rand() / RAND_MAX - 1.f;
 		}
 		move(dirx, diry);
 		if(dirx == 0 && diry == 0) dir = true;
