@@ -35,11 +35,8 @@ void Gardien::update (void) {
 	// if (0.01 > (double) std::rand() / RAND_MAX)
 	// 	fire(0.);
 
-
-
-
 		if(!dir){
-			if( (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
+			if((int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2) ){
 				auto a = dijkstra(_l,this);
 				dirx = a.first;
 				diry = a.second;

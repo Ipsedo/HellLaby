@@ -10,6 +10,7 @@ private:
 	bool dir;
 	int dirx;
 	int diry;
+	bool isProtector;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
