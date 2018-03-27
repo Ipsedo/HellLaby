@@ -4,7 +4,7 @@
 #include <iostream>
 #include <math.h>
 
-Gardien::Gardien (Labyrinthe* l, const char* modele, int index) : Mover (120, 80, l, modele) {
+Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
 	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
