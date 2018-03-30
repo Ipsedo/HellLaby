@@ -70,10 +70,10 @@ bool Gardien::move (double dx, double dy) {
 	int newX = x / Environnement::scale;
 	int newY = y / Environnement::scale;
 
-	char tmp = _l->data(newX, newY);
-	if (oldX != newX && oldY != newY && tmp != EMPTY) return false;
-	
 	((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
+	char tmp = _l->data(newX, newY);
+	if (tmp != EMPTY) return false;
+
 	((Labyrinthe*) _l)->setdata(newX, newY, GARDIEN);
 
 	_x = x;
