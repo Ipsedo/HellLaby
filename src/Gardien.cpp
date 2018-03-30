@@ -62,24 +62,22 @@ void Gardien::update (void) {
 }
 
 bool Gardien::move (double dx, double dy) {
-	// ((Labyrinthe*)_l)->setdata((int) _x / _l->scale,(int) _y / _l->scale, EMPTY);
-	std::cout << dx << " " << dy << '\n';
 	float x = _x + dx;
 	float y = _y + dy;
-	int posX = (int) x / _l->scale;
-	int posY = (int) y / _l->scale;
 
-	char tmp = _l->data(posX, posY);
-	// ((Labyrinthe*) _l)->setdata((int) _x / _l->scale,(int) _y / _l->scale, GARDIEN);
-	if (tmp != EMPTY) {
-		// haveHitWall = true;
-		return false;
-	}
+	int oldX = _x / Environnement::scale;
+	int oldY = _y / Environnement::scale;
+	int newX = x / Environnement::scale;
+	int newY = y / Environnement::scale;
+
+	char tmp = _l->data(newX, newY);
+	if (oldX != newX && oldY != newY && tmp != EMPTY) return false;
+	
+	((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
+	((Labyrinthe*) _l)->setdata(newX, newY, GARDIEN);
 
 	_x = x;
 	_y = y;
-
-
 	return true;
 }
 
