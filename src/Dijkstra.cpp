@@ -42,9 +42,9 @@ int distDij(Environnement* l, Mover* m){
       for (int j = -1; j < 2; j++) {
         auto p = make_pair(x+j,y+i);
         if ( (int) m->_x / l->scale == x+j && (int) m->_y /l->scale == y+i )  {
-          return dist[x+j][y+i];
+          return dist[x][y];
         }
-        if ( l->data(x+j,y+i) == EMPTY && !(i==0 && j==0) && djaVu.find(p) == djaVu.end()) {
+        if ( l->data(x+j,y+i) != FULL && !(i==0 && j==0) && djaVu.find(p) == djaVu.end()) {
           dist[x+j][y+i] = dist[x][y]+1;
           neig.push_back(p);
           djaVu.insert(p);
