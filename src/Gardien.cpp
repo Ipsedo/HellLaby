@@ -14,54 +14,71 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 }
 
 void Gardien::update (void) {
-	if (cpt == 0) {
-		float score = 0.f;
-		for (int i = 1; i < _l->_nguards; i++) {
-				score += distDij(_l, _l->_guards[i]);
-		}
-		score /= _l->_nguards;
-		score += 10.f * std::rand() / RAND_MAX; // ajout de 10pts de score random
-		if (score < downSeuil * _l->_nguards)
-			isProtector = false;
-		if (score > upSeuil * _l->_nguards)
-			isProtector = true;
-	}
 
-	if(!dir){
-		bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
-		if(isProtector && willUpdate){
-			// Le gardien est en mode protection
-			// TODO stopper le mouvement si on est proche du trésor
-			auto a = dijkstra(_l,this);
+	// if (cpt == 0) {
+	// 	float score = 0.f;
+	// 	for (int i = 1; i < _l->_nguards; i++) {
+	// 			score += distDij(_l, _l->_guards[i]);
+	// 	}
+	// 	score /= _l->_nguards;
+	// 	score += 10.f * std::rand() / RAND_MAX; // ajout de 10pts de score random
+	// 	if (score < downSeuil * _l->_nguards)
+	// 		isProtector = false;
+	// 	if (score > upSeuil * _l->_nguards)
+	// 		isProtector = true;
+	// }
+	//
+	// if(!dir){
+	// 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
+	// 	if(isProtector && willUpdate){
+	// 		// Le gardien est en mode protection
+	// 		// TODO stopper le mouvement si on est proche du trésor
+	// 		auto a = dijkstra(_l,this);
+	// 		dirx = a.first;
+	// 		diry = a.second;
+	// 		_angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
+	// 		if(dirx == 0 && diry == 0) dir = true;
+	// 	} else if (!isProtector && haveHitWall) {
+	// 		// TODO faire comportement quand guardien "voit" chasseur
+	// 		double randAngle = 2. * M_PI * (double) std::rand() / RAND_MAX;
+	// 		dirx = cos(randAngle);
+	// 		diry = sin(randAngle);
+	// 		_angle = 360 * randAngle / (M_PI * 2.) - 90.;
+	// 		haveHitWall = false;
+	// 	}
+	// 	move(dirx, diry);
+	// }
+	// cpt++;
+	// cpt %= 100;
+	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
+	if (willUpdate) {
+		auto a = dijkstra(_l,this);
 			dirx = a.first;
 			diry = a.second;
-			_angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
-			if(dirx == 0 && diry == 0) dir = true;
-		} else if (!isProtector && haveHitWall) {
-			// TODO faire comportement quand guardien "voit" chasseur
-			double randAngle = 2. * M_PI * (double) std::rand() / RAND_MAX;
-			dirx = cos(randAngle);
-			diry = sin(randAngle);
-			_angle = 360 * randAngle / (M_PI * 2.) - 90.;
-			haveHitWall = false;
-		}
-		move(dirx, diry);
 	}
-	cpt++;
-	cpt %= 100;
+	move(dirx, diry);
+
+
 }
 
 bool Gardien::move (double dx, double dy) {
+	// ((Labyrinthe*)_l)->setdata((int) _x / _l->scale,(int) _y / _l->scale, EMPTY);
+	std::cout << dx << " " << dy << '\n';
 	float x = _x + dx;
 	float y = _y + dy;
 	int posX = (int) x / _l->scale;
 	int posY = (int) y / _l->scale;
-	if (_l->data(posX, posY) == FULL) {
-		haveHitWall = true;
+
+	char tmp = _l->data(posX, posY);
+	// ((Labyrinthe*) _l)->setdata((int) _x / _l->scale,(int) _y / _l->scale, GARDIEN);
+	if (tmp != EMPTY) {
+		// haveHitWall = true;
 		return false;
 	}
+
 	_x = x;
 	_y = y;
+
 
 	return true;
 }

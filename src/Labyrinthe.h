@@ -23,6 +23,7 @@ public:
 	Labyrinthe (char*);
 	int width () { return lab_w;}	// retourne la largeur du labyrinthe.
 	int height () { return lab_h;}	// retourne la longueur du labyrinthe.
+	void setdata(int i,int j, char c) {this->_data[i][j] = c;}
 	char data (int i, int j)
 	{
 		return _data[i][j];
