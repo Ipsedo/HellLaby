@@ -71,7 +71,9 @@ bool Gardien::move (double dx, double dy) {
 	int newY = y / Environnement::scale;
 
 	((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
+	
 	char tmp = _l->data(newX, newY);
+
 	if (tmp != EMPTY) return false;
 
 	((Labyrinthe*) _l)->setdata(newX, newY, GARDIEN);
