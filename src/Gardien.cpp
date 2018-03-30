@@ -65,13 +65,13 @@ bool Gardien::move (double dx, double dy) {
 	float x = _x + dx;
 	float y = _y + dy;
 
-	int oldX = _x / Environnement::scale;
-	int oldY = _y / Environnement::scale;
-	int newX = x / Environnement::scale;
-	int newY = y / Environnement::scale;
+	int oldX = floor(_x / Environnement::scale);
+	int oldY = floor(_y / Environnement::scale);
+	int newX = floor(x / Environnement::scale);
+	int newY = floor(y / Environnement::scale);
 
 	((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
-	
+
 	char tmp = _l->data(newX, newY);
 
 	if (tmp != EMPTY) return false;
