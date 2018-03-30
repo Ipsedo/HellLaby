@@ -2,80 +2,89 @@
 #include "Dijkstra.h"
 #include <cstdlib>
 #include <iostream>
+#include <tuple>
 #include <math.h>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
 	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
-	cpt = (int) 99.f * (float) std::rand() / RAND_MAX;
-	downSeuil = 3.f;
-	upSeuil = 5.f;
+	cpt = (int) 100.f * (float) std::rand() / RAND_MAX;
+	downSeuil = 30.f;
+	upSeuil = 50.f;
+}
+
+std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
+	std::vector<std::pair<int, int> > dir;
+	for (int i = -1; i < 2; i++) {
+		for (int j = -1; j < 2; j++) {
+			int newX = pos.first + i;
+			int newY = pos.second + j;
+			if (!(i == 0 && j == 0) && l->data(newX, newY) != FULL) {
+				dir.push_back(std::make_pair(i, j));
+			}
+		}
+	}
+	int ran = dir.size() * (float) std::rand() / RAND_MAX;
+	return dir[ran];
 }
 
 void Gardien::update (void) {
+	if (cpt == 0) {
+		float score = 0.f;
+		for (int i = 1; i < _l->_nguards; i++) {
+				int dist = distDij(_l, _l->_guards[i]);
+				score += dist;
+		}
+		score /= _l->_nguards;
+		score += 10.f * std::rand() / RAND_MAX; // ajout de 20pts de score random
+		if (score < downSeuil)
+			isProtector = false;
+		if (score > upSeuil)
+			isProtector = true;
+	}
 
-	// if (cpt == 0) {
-	// 	float score = 0.f;
-	// 	for (int i = 1; i < _l->_nguards; i++) {
-	// 			score += distDij(_l, _l->_guards[i]);
-	// 	}
-	// 	score /= _l->_nguards;
-	// 	score += 10.f * std::rand() / RAND_MAX; // ajout de 10pts de score random
-	// 	if (score < downSeuil * _l->_nguards)
-	// 		isProtector = false;
-	// 	if (score > upSeuil * _l->_nguards)
-	// 		isProtector = true;
-	// }
-	//
-	// if(!dir){
-	// 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
-	// 	if(isProtector && willUpdate){
-	// 		// Le gardien est en mode protection
-	// 		// TODO stopper le mouvement si on est proche du trésor
-	// 		auto a = dijkstra(_l,this);
-	// 		dirx = a.first;
-	// 		diry = a.second;
-	// 		_angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
-	// 		if(dirx == 0 && diry == 0) dir = true;
-	// 	} else if (!isProtector && haveHitWall) {
-	// 		// TODO faire comportement quand guardien "voit" chasseur
-	// 		double randAngle = 2. * M_PI * (double) std::rand() / RAND_MAX;
-	// 		dirx = cos(randAngle);
-	// 		diry = sin(randAngle);
-	// 		_angle = 360 * randAngle / (M_PI * 2.) - 90.;
-	// 		haveHitWall = false;
-	// 	}
-	// 	move(dirx, diry);
-	// }
-	// cpt++;
-	// cpt %= 100;
 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
+
 	if (willUpdate) {
-		auto a = dijkstra(_l,this);
-			dirx = a.first;
-			diry = a.second;
+		int oldX = _x / Environnement::scale;
+		int oldY = _y / Environnement::scale;
+		((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
+
+		if (isProtector) {
+			int dist = distDij(_l, this);
+			if (dist < downSeuil / 2) {
+				// Aléatoire
+				auto dir = randomDir(_l, std::make_pair(oldX, oldY));
+				dirx = dir.first;
+				diry = dir.second;
+			} else {
+				// Dijsktra
+				auto a = dijkstra(_l,this);
+				dirx = a.first;
+				diry = a.second;
+			}
+		} else {
+			// Aléatoire
+			auto dir = randomDir(_l, std::make_pair(oldX, oldY));
+			dirx = dir.first;
+			diry = dir.second;
+		}
+		 _angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
+		int futureX = oldX + dirx;
+		int futureY = oldY + diry;
+		((Labyrinthe*) _l)->setdata(futureX, futureY, GARDIEN);
 	}
 	move(dirx, diry);
 
+	cpt++;
+	cpt %= 100;
 
 }
 
 bool Gardien::move (double dx, double dy) {
-	float x = _x + dx;
-	float y = _y + dy;
-
-	int oldX = floor(_x / Environnement::scale);
-	int oldY = floor(_y / Environnement::scale);
-	int newX = floor(x / Environnement::scale);
-	int newY = floor(y / Environnement::scale);
-
-	((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
-
-	((Labyrinthe*) _l)->setdata(newX, newY, GARDIEN);
-
-	_x = x;
-	_y = y;
+	_x += dx;
+	_y += dy;
 	return true;
 }
 
