@@ -125,7 +125,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 	return false;
 }
 
-bool Gariden::isSeing() {
+bool Gardien::isSeing() {
 	Mover* toSee = _l->_guards[0];
 	/*dx = x2 - x1
 dy = y2 - y1
@@ -144,7 +144,7 @@ for x from x1 to x2 {
 
 	for (int i = currX; i < targetX; i++) {
 		int y = currY + dy * (i - currX) / dx;
-		if (_l->data(x, y) != EMPTY)
+		if (_l->data(i, y) != EMPTY)
 			return false;
 	}
 	return true;
