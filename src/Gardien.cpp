@@ -147,13 +147,13 @@ bool Gardien::isSeing() {
 	int dy = targetY - currY;
 
 	if (currX < targetX) {
-		for (int i = currX; i < targetX; i++) {
+		for (int i = currX; i <= targetX; i++) {
 			int y = currY + dy * (i - currX) / dx;
 			if (_l->data(i, y) != EMPTY)
 				return false;
 		}
 	} else {
-		for (int i = currX; i > targetX; i--) {
+		for (int i = currX; i >= targetX; i--) {
 			int y = currY + dy * (i - currX) / dx;
 			if (_l->data(i, y) != EMPTY)
 				return false;
