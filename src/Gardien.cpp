@@ -50,7 +50,7 @@ void Gardien::update (void) {
 	if (willUpdate) {
 
 		message("%d",this->isSeing());
-		if (!activeFireBall && this->isSeing()){
+		if (this->isSeing()){
 			activeFireBall = true;
 			float dx = _l->_guards[0]->_x - _x;
 			float dy = _l->_guards[0]->_y - _y;
@@ -130,6 +130,76 @@ bool Gardien::process_fireball (float dx, float dy) {
 	return false;
 }
 
+bool Gardien::plotLineLow(int x0, int y0, int x1, int y1) {
+  int dx = x1 - x0;
+  int dy = y1 - y0;
+  int yi = 1;
+  if (dy < 0) {
+    yi = -1;
+    dy = -dy;
+  }
+  int D = 2*dy - dx;
+  int y = y0;
+
+	if (x0 < x1) {
+  	for (int x = x0; x < x1; x++) {
+			if (_l->data(x, y) != EMPTY)
+				return false;
+    	if (D > 0) {
+       	y = y + yi;
+       	D = D - 2*dx;
+    	}
+    	D = D + 2*dy;
+		}
+	} else {
+		for (int x = x0; x > x1; x--) {
+			if (_l->data(x, y) != EMPTY)
+				return false;
+    	if (D > 0) {
+       	y = y + yi;
+       	D = D - 2*dx;
+    	}
+    	D = D + 2*dy;
+		}
+	}
+	return true;
+}
+
+bool Gardien::plotLineHigh(int x0, int y0, int x1, int y1) {
+	int dx = x1 - x0;
+  int dy = y1 - y0;
+  int xi = 1;
+  if (dx < 0) {
+    xi = -1;
+    dx = -dx;
+  }
+  int D = 2*dx - dy;
+  int x = x0;
+
+	if (y0 < y1) {
+  	for (int y = y0; y < y1; y++) {
+			if (_l->data(x, y) != EMPTY)
+				return false;
+    	if (D > 0) {
+       	x = x + xi;
+       	D = D - 2*dy;
+    	}
+    	D = D + 2*dx;
+		}
+	} else {
+		for (int y = y0; y > y1; y--) {
+			if (_l->data(x, y) != EMPTY)
+				return false;
+    	if (D > 0) {
+       	x = x + xi;
+       	D = D - 2*dy;
+    	}
+    	D = D + 2*dx;
+		}
+	}
+	return true;
+}
+
 bool Gardien::isSeing() {
 	Mover* toSee = _l->_guards[0];
 	/*
@@ -141,13 +211,13 @@ bool Gardien::isSeing() {
   	plot(x, y)
 	}
 	*/
-	int currX = _x / Environnement::scale;
-	int currY = _y / Environnement::scale;
+	int x0 = _x / Environnement::scale;
+	int y0 = _y / Environnement::scale;
 
-	int targetX = toSee->_x / Environnement::scale;
-	int targetY = toSee->_y / Environnement::scale;
+	int x1 = toSee->_x / Environnement::scale;
+	int y1 = toSee->_y / Environnement::scale;
 
-	int dx = targetX - currX;
+	/*int dx = targetX - currX;
 	int dy = targetY - currY;
 
 	if (currX < targetX) {
@@ -162,6 +232,18 @@ bool Gardien::isSeing() {
 			if (_l->data(i, y) != EMPTY)
 				return false;
 		}
-	}
-	return true;
+	}*/
+  if (abs(y1 - y0) < abs(x1 - x0)) {
+    if (x0 > x1) {
+      return plotLineLow(x1, y1, x0, y0);
+    } else {
+      return plotLineLow(x0, y0, x1, y1);
+    }
+  } else {
+    if (y0 > y1) {
+      return plotLineHigh(x1, y1, x0, y0);
+    } else {
+      return plotLineHigh(x0, y0, x1, y1);
+    }
+  }
 }

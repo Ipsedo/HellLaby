@@ -16,6 +16,8 @@ private:
 	int cpt;
 	bool haveHitWall;
 	bool activeFireBall;
+	bool plotLineHigh(int x0, int y0, int x1, int y1);
+	bool plotLineLow(int x0, int y0, int x1, int y1);
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
