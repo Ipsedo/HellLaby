@@ -12,6 +12,7 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	cpt = (int) 100.f * (float) std::rand() / RAND_MAX;
 	downSeuil = 30.f;
 	upSeuil = 50.f;
+	activeFireBall = false;
 }
 
 std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
@@ -30,6 +31,13 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
+	if (!activeFireBall && (((float) std::rand()) / RAND_MAX) < 0.1 ){
+		activeFireBall = true;
+		this -> fire(this->_angle);
+	}
+
+
+
 	if (cpt == 0) {
 		float score = 0.f;
 		for (int i = 1; i < _l->_nguards; i++) {
@@ -110,6 +118,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 	//float	dmax2 = (_l->width ())*(_l->width ()) + (_l->height())*(_l->height());
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	//_wall_hit -> play (1. - dist2/dmax2);
+	activeFireBall = false;
 	message ("[MOB] Booom...");
 	return false;
 }

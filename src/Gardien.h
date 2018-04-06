@@ -15,6 +15,7 @@ private:
 	float upSeuil;
 	int cpt;
 	bool haveHitWall;
+	bool activeFireBall;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
