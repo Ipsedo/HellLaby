@@ -30,13 +30,6 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
-	if (cpt == 50 && !activeFireBall && this->isSeing()){
-		activeFireBall = true;
-		float dx = _l->_guards[0]->_x - _x;
-		float dy = _l->_guards[0]->_y - _y;
-		_angle = 360 * atan2(dy, dx) / (M_PI * 2.) - 90;
-		this -> fire(0.);
-	}
 
 	if (cpt == 0) {
 		float score = 0.f;
@@ -55,6 +48,16 @@ void Gardien::update (void) {
 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
 
 	if (willUpdate) {
+
+		message("%d",this->isSeing());
+		if (!activeFireBall && this->isSeing()){
+			activeFireBall = true;
+			float dx = _l->_guards[0]->_x - _x;
+			float dy = _l->_guards[0]->_y - _y;
+			_angle = 360 * atan2(dy, dx) / (M_PI * 2.) - 90;
+			this -> fire(0.);
+		}
+
 		int oldX = _x / Environnement::scale;
 		int oldY = _y / Environnement::scale;
 		((Labyrinthe*) _l)->setdata(oldX, oldY, EMPTY);
@@ -88,7 +91,7 @@ void Gardien::update (void) {
 	move(dirx, diry);
 
 	cpt++;
-	cpt %= 100;
+	cpt %= 1000;
 
 }
 
@@ -109,7 +112,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 	float	y = (_y - _fb->get_y()) / Environnement::scale;
 	float	dist2 = x*x + y*y;
 	// on bouge que dans le vide!
-	if (EMPTY == _l->data((int)((_fb->get_x() + dx) / Environnement::scale),
+	if (FULL != _l->data((int)((_fb->get_x() + dx) / Environnement::scale),
 	(int)((_fb->get_y() + dy) / Environnement::scale)))
 	{
 		message ("[MOB] Woooshh ..... %d", (int) dist2);
@@ -122,7 +125,8 @@ bool Gardien::process_fireball (float dx, float dy) {
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	//_wall_hit -> play (1. - dist2/dmax2);
 	activeFireBall = false;
-	message ("[MOB] Booom...");
+	message ("[MOB] Booom...%d,%d", (int)((_fb->get_x() + dx) / Environnement::scale),
+	(int)((_fb->get_y() + dy) / Environnement::scale));
 	return false;
 }
 
