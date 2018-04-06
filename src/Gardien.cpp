@@ -125,12 +125,25 @@ bool Gardien::process_fireball (float dx, float dy) {
 	return false;
 }
 
-bool Gariden::isSeing(Mover* toSee) {
+bool Gariden::isSeing() {
+	Mover* toSee = _l->_guards[0];
 	/*dx = x2 - x1
 dy = y2 - y1
 for x from x1 to x2 {
   y = y1 + dy * (x - x1) / dx
   plot(x, y)
 }*/
-return false;
+	int currX = _x / Environnement::scale;
+	int currY = _y / Environnement::scale;
+
+	int targetX = toSee->_x / Environnement::scale;
+	int targetY = toSee->_y / Environnement::scale;
+
+	int dx = targetX - currX;
+	int dy = targetY - currY;
+
+	for (int i = currX; i < targetX; i++) {
+		int y = currY + dy * (i - currX) / dx;
+	}
+	return false;
 }

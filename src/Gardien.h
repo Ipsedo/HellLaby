@@ -29,7 +29,7 @@ public:
 	// quand a faire bouger la boule de feu...
 	bool process_fireball (float dx, float dy);// { return false; }
 
-	bool isSeing(Mover* toSee);
+	bool isSeing();
 };
 
 #endif
