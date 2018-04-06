@@ -30,7 +30,6 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
-
 	if (cpt == 50 && !activeFireBall && this->isSeing()){
 		activeFireBall = true;
 		this -> fire(0.);
