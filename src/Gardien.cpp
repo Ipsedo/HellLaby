@@ -35,7 +35,7 @@ void Gardien::update (void) {
 		activeFireBall = true;
 		this -> fire(0.);
 	}
-	
+
 
 
 	if (cpt == 0) {
@@ -128,12 +128,15 @@ bool Gardien::process_fireball (float dx, float dy) {
 
 bool Gardien::isSeing() {
 	Mover* toSee = _l->_guards[0];
-	/*dx = x2 - x1
-dy = y2 - y1
-for x from x1 to x2 {
-  y = y1 + dy * (x - x1) / dx
-  plot(x, y)
-}*/
+	/*
+	https://en.wikipedia.org/wiki/Line_drawing_algorithm
+	dx = x2 - x1
+	dy = y2 - y1
+	for x from x1 to x2 {
+  	y = y1 + dy * (x - x1) / dx
+  	plot(x, y)
+	}
+	*/
 	int currX = _x / Environnement::scale;
 	int currY = _y / Environnement::scale;
 
