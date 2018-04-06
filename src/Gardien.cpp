@@ -7,7 +7,6 @@
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
-	haveHitWall = true; // On veut calculer une première fois l'angle de déplacement
 	isProtector = true;
 	cpt = (int) 100.f * (float) std::rand() / RAND_MAX;
 	downSeuil = 30.f;
@@ -37,7 +36,7 @@ void Gardien::update (void) {
 				score += dist;
 		}
 		score /= _l->_nguards;
-		score += 10.f * std::rand() / RAND_MAX; // ajout de 20pts de score random
+		score += 10.f * (float) std::rand() / RAND_MAX; // ajout de 10pts de score random
 		if (score < downSeuil)
 			isProtector = false;
 		if (score > upSeuil)
@@ -53,7 +52,7 @@ void Gardien::update (void) {
 
 		if (isProtector) {
 			int dist = distDij(_l, this);
-			if (dist < downSeuil / 2) {
+			if (dist < 2) {
 				// Aléatoire
 				auto dir = randomDir(_l, std::make_pair(oldX, oldY));
 				dirx = dir.first;
@@ -66,9 +65,11 @@ void Gardien::update (void) {
 			}
 		} else {
 			// Aléatoire
-			auto dir = randomDir(_l, std::make_pair(oldX, oldY));
-			dirx = dir.first;
-			diry = dir.second;
+			if (_l->data(oldX + dirx, oldY + diry) != EMPTY) {
+				auto dir = randomDir(_l, std::make_pair(oldX, oldY));
+				dirx = dir.first;
+				diry = dir.second;
+			}
 		}
 		 _angle = 360 * atan2(diry, dirx) / (M_PI * 2.) - 90;
 		int futureX = oldX + dirx;
@@ -85,6 +86,7 @@ void Gardien::update (void) {
 bool Gardien::move (double dx, double dy) {
 	_x += dx;
 	_y += dy;
+
 	return true;
 }
 
