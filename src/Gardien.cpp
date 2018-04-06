@@ -144,6 +144,8 @@ for x from x1 to x2 {
 
 	for (int i = currX; i < targetX; i++) {
 		int y = currY + dy * (i - currX) / dx;
+		if (_l->data(x, y) != EMPTY)
+			return false;
 	}
-	return false;
+	return true;
 }
