@@ -32,6 +32,9 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 void Gardien::update (void) {
 	if (cpt == 50 && !activeFireBall && this->isSeing()){
 		activeFireBall = true;
+		float dx = _l->_guards[0]->_x - _x;
+		float dy = _l->_guards[0]->_y - _y;
+		_angle = 360 * atan2(dy, dx) / (M_PI * 2.) - 90;
 		this -> fire(0.);
 	}
 
