@@ -30,11 +30,12 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
-	if (!activeFireBall && (((float) std::rand()) / RAND_MAX) < 0.1 ){
-		activeFireBall = true;
-		this -> fire(this->_angle);
-	}
 
+	if (!activeFireBall && cpt == 50 ){
+		activeFireBall = true;
+		this -> fire(0.);
+	}
+	
 
 
 	if (cpt == 0) {
