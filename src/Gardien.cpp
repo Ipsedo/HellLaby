@@ -36,8 +36,6 @@ void Gardien::update (void) {
 		this -> fire(0.);
 	}
 
-
-
 	if (cpt == 0) {
 		float score = 0.f;
 		for (int i = 1; i < _l->_nguards; i++) {
@@ -147,13 +145,13 @@ bool Gardien::isSeing() {
 	int dy = targetY - currY;
 
 	if (currX < targetX) {
-		for (int i = currX; i <= targetX; i++) {
+		for (int i = currX; i < targetX; i++) {
 			int y = currY + dy * (i - currX) / dx;
 			if (_l->data(i, y) != EMPTY)
 				return false;
 		}
 	} else {
-		for (int i = currX; i >= targetX; i--) {
+		for (int i = currX; i > targetX; i--) {
 			int y = currY + dy * (i - currX) / dx;
 			if (_l->data(i, y) != EMPTY)
 				return false;
