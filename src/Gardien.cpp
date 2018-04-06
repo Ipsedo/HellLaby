@@ -124,3 +124,13 @@ bool Gardien::process_fireball (float dx, float dy) {
 	message ("[MOB] Booom...");
 	return false;
 }
+
+bool Gariden::isSeing(Mover* toSee) {
+	/*dx = x2 - x1
+dy = y2 - y1
+for x from x1 to x2 {
+  y = y1 + dy * (x - x1) / dx
+  plot(x, y)
+}*/
+return false;
+}
