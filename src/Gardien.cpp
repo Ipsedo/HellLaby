@@ -86,9 +86,17 @@ void Gardien::update (void) {
 				diry = dir.second;
 			} else {
 				// Dijsktra
-				auto a = dijkstra(_l,this);
-				dirx = a.first;
-				diry = a.second;
+				// 50% de chance d'aller dans la bonne direction
+				// 50% de chance de se tromper de direction
+				if ((float) std::rand() / RAND_MAX) {
+					auto a = dijkstra(_l,this);
+					dirx = a.first;
+					diry = a.second;
+				} else {
+					auto dir = randomDir(_l, std::make_pair(oldX, oldY));
+					dirx = dir.first;
+					diry = dir.second;
+				}
 			}
 		} else {
 			// Aléatoire
