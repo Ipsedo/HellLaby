@@ -1,4 +1,5 @@
 #include "Chasseur.h"
+#include "Environnement.h"
 
 using namespace std;
 /*
@@ -44,6 +45,7 @@ void Chasseur::toucher(){
 	message ("Your life : %d",_life);
 	if (_life==0) {
 		message ("Loss");
+		partie_terminee(false);
 	}
 }
 void Chasseur::regen(int pv){
