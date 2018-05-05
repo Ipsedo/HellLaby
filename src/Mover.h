@@ -25,8 +25,6 @@ public:
 	virtual ~Mover () {}
 	void tomber ();			// fait tomber un personnage (gardien) et se relever
 	void rester_au_sol ();	// fait tomber un personnage (gardien) et le laisse au sol.
-	void toucher(); //perd de la vie quand on est toucher.
-	void regen(int pv); //regenere la vie.
 	virtual void update (void) =0;	// fait 'penser' le personnage (gardien).
 	// fait bouger la boule de feu du personnage.
 	virtual bool process_fireball (float dx, float dy) =0;
