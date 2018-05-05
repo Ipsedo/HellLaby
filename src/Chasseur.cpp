@@ -1,5 +1,6 @@
 #include "Chasseur.h"
 #include "Environnement.h"
+#include "Gardien.h"
 
 using namespace std;
 /*
@@ -8,17 +9,20 @@ using namespace std;
 
 bool Chasseur::move_aux (double dx, double dy)
 {
-	/*if (EMPTY == _l -> data ((int)((_x + dx) / Environnement::scale),
-							 (int)((_y + dy) / Environnement::scale)))
-	{
-		_x += dx;
-		_y += dy;
-		return true;
-	}*/
 	int posX = (_x + dx) / Environnement::scale;
 	int posY = (_y + dy) / Environnement::scale;
+
 	int oldX = _x / Environnement::scale;
 	int oldY = _y / Environnement::scale;
+
+	for (int i = -1; i < 2; i++) {
+		for (int j = -1; j < 2; j++) {
+			if(_l->_treasor._x == posX+j && _l->_treasor._y == posY+i){
+				partie_terminee(true);
+			}
+		}
+	}
+
 	if ((posX != oldX || posY != oldY) && _l->data(posX, posY) == FULL)
 		return false;
 
@@ -71,6 +75,8 @@ bool Chasseur::process_fireball (float dx, float dy)
 	// calculer la distance entre le chasseur et le lieu de l'explosion.
 	float	x = (_x - _fb -> get_x ()) / Environnement::scale;
 	float	y = (_y - _fb -> get_y ()) / Environnement::scale;
+	int currX = (int)((_fb->get_x() + dx) / Environnement::scale);
+	int currY = (int)((_fb->get_y() + dy) / Environnement::scale);
 	float	dist2 = x*x + y*y;
 	// on bouge que dans le vide!
 	if (EMPTY == _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),
@@ -84,6 +90,18 @@ bool Chasseur::process_fireball (float dx, float dy)
 	float	dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	_wall_hit -> play (1. - dist2/dmax2);
+
+
+	for (size_t i = 1; i < _l->_nguards; i++) {
+		Gardien* c = dynamic_cast<Gardien*>(_l -> _guards[i]);
+		int GX = c->_x / Environnement::scale;
+		int GY = c->_y / Environnement::scale;
+		if (GX == currX && GY == currY) {
+			c->toucher();
+		}
+
+	}
+
 	return false;
 }
 
