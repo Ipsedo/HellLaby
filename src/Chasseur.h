@@ -13,6 +13,7 @@ class Chasseur : public Mover {
 private:
 	// accepte ou non un deplacement.
 	bool move_aux (double dx, double dy);
+	int no_move;
 public:
 	/*
 	 *	Le son...
@@ -24,12 +25,13 @@ public:
 	Chasseur (Labyrinthe* l);
 	// ne bouger que dans une case vide (on 'glisse' le long des obstacles)
 	bool move (double dx, double dy) {
+		no_move = 0;
 		return move_aux (dx, dy) || move_aux (dx, 0.0) || move_aux (0.0, dy);
 	}
 	void toucher();
 	void regen(int pv);
 	// le chasseur ne pense pas!
-	void update (void) {};
+	void update (void);
 	// fait bouger la boule de feu (ceci est une exemple, � vous de traiter les collisions sp�cifiques...)
 	bool process_fireball (float dx, float dy);
 	// tire sur un ennemi.

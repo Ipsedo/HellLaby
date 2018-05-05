@@ -32,6 +32,7 @@ bool Chasseur::move_aux (double dx, double dy)
 
 Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 {
+	no_move = 0;
 	_hunter_fire = new Sound ("sons/hunter_fire.wav");
 	_hunter_hit = new Sound ("sons/hunter_hit.wav");
 	if (_wall_hit == 0)
@@ -50,6 +51,15 @@ void Chasseur::regen(int pv){
 	message ("Your life : %d",_life);
 }
 
+void Chasseur::update (void){
+	std::cout << "la" << '\n';
+	no_move++;
+	if(no_move == 100){
+		std::cout << "ici" << '\n';
+		regen(100);
+		no_move=0;
+	}
+}
 /*
 *	Fait bouger la boule de feu (ceci est une exemple, � vous de traiter les collisions sp�cifiques...)
 */
