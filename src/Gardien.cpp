@@ -1,5 +1,6 @@
 #include "Gardien.h"
 #include "Dijkstra.h"
+#include "Chasseur.h"
 #include <cstdlib>
 #include <iostream>
 #include <tuple>
@@ -127,9 +128,18 @@ bool Gardien::process_fireball (float dx, float dy) {
 	float	y = (_y - _fb->get_y()) / Environnement::scale;
 	float	dist2 = x*x + y*y;
 	// on bouge que dans le vide!
-	if (FULL != _l->data((int)((_fb->get_x() + dx) / Environnement::scale),
-	(int)((_fb->get_y() + dy) / Environnement::scale)))
-	{
+	int currX = (int)((_fb->get_x() + dx) / Environnement::scale);
+	int currY = (int)((_fb->get_y() + dy) / Environnement::scale);
+
+	int chasseurX = _l->_guards[0]->_x / Environnement::scale;
+	int chasseurY = _l->_guards[0]->_y / Environnement::scale;
+	if (chasseurX == currX && chasseurY == currY) {
+		Chasseur* c = dynamic_cast<Chasseur*>(_l->_guards[0]);
+		c->toucher();
+	}
+
+	int currCase = _l->data(currX, currY);
+	if (FULL != currCase) {
 		message ("[MOB] Woooshh ..... %d", (int) dist2);
 		// il y a la place.
 		return true;
