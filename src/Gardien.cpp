@@ -70,7 +70,7 @@ void Gardien::update (void) {
 			activeFireBall = true;
 			float dx = _l->_guards[0]->_x - _x;
 			float dy = _l->_guards[0]->_y - _y;
-			_angle = 360 * atan2(dy, dx) / (M_PI * 2.) - 90;
+			_angle = -360 * atan2(dy, dx) / (M_PI * 2.) + 90;
 			this -> fire(0.);
 		}
 
