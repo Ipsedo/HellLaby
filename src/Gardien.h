@@ -17,6 +17,7 @@ private:
 	bool haveHitWall;
 	bool activeFireBall;
 	int max_life;
+	bool dead;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/

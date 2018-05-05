@@ -15,6 +15,7 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	upSeuil = 50.f;
 	activeFireBall = false;
 	max_life = _life;
+	dead = false;
 }
 
 void Gardien::toucher(){
@@ -22,6 +23,7 @@ void Gardien::toucher(){
 	if (_life==0) {
 		message ("Mort");
 		rester_au_sol();
+		dead = true;
 	}else{
 		tomber();
 	}
@@ -47,7 +49,7 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
-
+	if (dead) return;
 	if (cpt == 0) {
 		float score = 0.f;
 		for (int i = 1; i < _l->_nguards; i++) {
