@@ -14,6 +14,7 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	downSeuil = 30.f;
 	upSeuil = 50.f;
 	activeFireBall = false;
+	max_life = _life;
 }
 
 void Gardien::toucher(){
@@ -117,7 +118,21 @@ bool Gardien::move (double dx, double dy) {
 }
 
 void Gardien::fire (int angle_vertical) {
-	_fb->init(_x, _y , Environnement::scale, angle_vertical, _angle);
+	float coeffPrecision = 5.f;
+	float precision = (1.f - _life / max_life) * coeffPrecision;
+
+	float angleH;
+	float angleV;
+	float randomHorizontal = (float) std::rand() / RAND_MAX;
+	float randomVertical = (float) std::rand() / RAND_MAX;
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleH = _angle + precision * randomHorizontal;
+		angleV = angle_vertical + precision * randomVertical;
+	} else {
+		angleH = _angle - precision * randomHorizontal;
+		angleV = angle_vertical - precision * randomVertical;
+	}
+	_fb->init(_x, _y , Environnement::scale, angleV, angleH);
 }
 
 bool Gardien::process_fireball (float dx, float dy) {
