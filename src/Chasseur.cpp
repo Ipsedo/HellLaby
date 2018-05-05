@@ -112,7 +112,7 @@ bool Chasseur::process_fireball (float dx, float dy)
 void Chasseur::fire (int angle_vertical)
 {
 	_hunter_fire -> play ();
-	float coeffPrecision = 1.f;
+	float coeffPrecision = 0.2f;
 	float precision = (1.f - _life / max_life) * coeffPrecision;
 
 	float angleH;
