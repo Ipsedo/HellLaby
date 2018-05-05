@@ -63,7 +63,7 @@ bool Chasseur::process_fireball (float dx, float dy)
 	if (EMPTY == _l -> data ((int)((_fb -> get_x () + dx) / Environnement::scale),
 							 (int)((_fb -> get_y () + dy) / Environnement::scale)))
 	{
-		message ("Woooshh ..... %d", (int) dist2);
+		//message ("Woooshh ..... %d", (int) dist2);
 		// il y a la place.
 		return true;
 	}
@@ -72,7 +72,7 @@ bool Chasseur::process_fireball (float dx, float dy)
 	float	dmax2 = (_l -> width ())*(_l -> width ()) + (_l -> height ())*(_l -> height ());
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	_wall_hit -> play (1. - dist2/dmax2);
-	message ("Booom...");
+	//message ("Booom...");
 	return false;
 }
 
@@ -82,7 +82,7 @@ bool Chasseur::process_fireball (float dx, float dy)
 
 void Chasseur::fire (int angle_vertical)
 {
-	message ("Woooshh...");
+	//message ("Woooshh...");
 	_hunter_fire -> play ();
 	_fb -> init (/* position initiale de la boule */ _x, _y, 10.,
 				 /* angles de vis�e */ angle_vertical, _angle);

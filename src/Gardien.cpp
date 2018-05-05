@@ -140,7 +140,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 
 	int currCase = _l->data(currX, currY);
 	if (FULL != currCase) {
-		message ("[MOB] Woooshh ..... %d", (int) dist2);
+		//message ("[MOB] Woooshh ..... %d", (int) dist2);
 		// il y a la place.
 		return true;
 	}
@@ -150,8 +150,7 @@ bool Gardien::process_fireball (float dx, float dy) {
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	//_wall_hit -> play (1. - dist2/dmax2);
 	activeFireBall = false;
-	message ("[MOB] Booom...%d,%d", (int)((_fb->get_x() + dx) / Environnement::scale),
-	(int)((_fb->get_y() + dy) / Environnement::scale));
+	//message ("[MOB] Booom...%d,%d", (int)((_fb->get_x() + dx) / Environnement::scale),(int)((_fb->get_y() + dy) / Environnement::scale));
 	return false;
 }
 
