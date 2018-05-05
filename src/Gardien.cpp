@@ -14,6 +14,7 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	downSeuil = 30.f;
 	upSeuil = 50.f;
 	activeFireBall = false;
+	max_life = _life;
 }
 
 void Gardien::toucher(){
@@ -85,9 +86,17 @@ void Gardien::update (void) {
 				diry = dir.second;
 			} else {
 				// Dijsktra
-				auto a = dijkstra(_l,this);
-				dirx = a.first;
-				diry = a.second;
+				// 50% de chance d'aller dans la bonne direction
+				// 50% de chance de se tromper de direction
+				if ((float) std::rand() / RAND_MAX) {
+					auto a = dijkstra(_l,this);
+					dirx = a.first;
+					diry = a.second;
+				} else {
+					auto dir = randomDir(_l, std::make_pair(oldX, oldY));
+					dirx = dir.first;
+					diry = dir.second;
+				}
 			}
 		} else {
 			// Aléatoire
@@ -117,7 +126,24 @@ bool Gardien::move (double dx, double dy) {
 }
 
 void Gardien::fire (int angle_vertical) {
-	_fb->init(_x, _y , Environnement::scale, angle_vertical, _angle);
+	float coeffPrecision = 5.f;
+	float precision = (1.f - _life / max_life) * coeffPrecision;
+
+	float angleH;
+	float angleV;
+	float randomHorizontal = (float) std::rand() / RAND_MAX;
+	float randomVertical = (float) std::rand() / RAND_MAX;
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleH = _angle + precision * randomHorizontal;
+	} else {
+		angleH = _angle - precision * randomHorizontal;
+	}
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleV = angle_vertical + precision * randomVertical;
+	} else {
+		angleV = angle_vertical - precision * randomVertical;
+	}
+	_fb->init(_x, _y , Environnement::scale, angleV, angleH);
 }
 
 bool Gardien::process_fireball (float dx, float dy) {

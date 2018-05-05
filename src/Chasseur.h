@@ -14,6 +14,7 @@ private:
 	// accepte ou non un deplacement.
 	bool move_aux (double dx, double dy);
 	int no_move;
+	int max_life;
 public:
 	/*
 	 *	Le son...

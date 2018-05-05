@@ -38,6 +38,7 @@ bool Chasseur::move_aux (double dx, double dy)
 Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 {
 	no_move = 0;
+	max_life = _life;
 	_hunter_fire = new Sound ("sons/hunter_fire.wav");
 	_hunter_hit = new Sound ("sons/hunter_hit.wav");
 	if (_wall_hit == 0)
@@ -111,6 +112,23 @@ bool Chasseur::process_fireball (float dx, float dy)
 void Chasseur::fire (int angle_vertical)
 {
 	_hunter_fire -> play ();
-	_fb -> init (/* position initiale de la boule */ _x, _y, 10.,
-				 /* angles de vis�e */ angle_vertical, _angle);
+	float coeffPrecision = 5.f;
+	float precision = (1.f - _life / max_life) * coeffPrecision;
+
+	float angleH;
+	float angleV;
+	float randomHorizontal = (float) std::rand() / RAND_MAX;
+	float randomVertical = (float) std::rand() / RAND_MAX;
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleH = _angle + precision * randomHorizontal;
+	} else {
+		angleH = _angle - precision * randomHorizontal;
+	}
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleV = angle_vertical + precision * randomVertical;
+	} else {
+		angleV = angle_vertical - precision * randomVertical;
+	}
+
+	_fb->init (_x, _y, 10., angleV, angleH);
 }
