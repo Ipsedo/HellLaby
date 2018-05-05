@@ -64,8 +64,6 @@ void Gardien::update (void) {
 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
 
 	if (willUpdate) {
-
-		message("%d",this->isSeing());
 		if (this->isSeing() && !activeFireBall){
 			activeFireBall = true;
 			float dx = _l->_guards[0]->_x - _x;
@@ -140,7 +138,6 @@ bool Gardien::process_fireball (float dx, float dy) {
 
 	int currCase = _l->data(currX, currY);
 	if (FULL != currCase) {
-		//message ("[MOB] Woooshh ..... %d", (int) dist2);
 		// il y a la place.
 		return true;
 	}
@@ -150,7 +147,6 @@ bool Gardien::process_fireball (float dx, float dy) {
 	// faire exploser la boule de feu avec un bruit fonction de la distance.
 	//_wall_hit -> play (1. - dist2/dmax2);
 	activeFireBall = false;
-	//message ("[MOB] Booom...%d,%d", (int)((_fb->get_x() + dx) / Environnement::scale),(int)((_fb->get_y() + dy) / Environnement::scale));
 	return false;
 }
 
