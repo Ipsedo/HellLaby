@@ -15,14 +15,18 @@ public:
 	float		_x, _y;		// position.
 	int			_angle;		// angle de d�placement/tir.
 	void*		_model;			// le mod�le graphique.
+	int 		_life;
 
 	Mover (int x, int y, Labyrinthe* l, const char* modele) :
 		_l ((Environnement*)l), _fb (0), _x ((float)x), _y ((float)y),
 		_angle (0)
-	{ _model = init (modele); }
+	{ _model = init (modele);
+	 	_life = 100;}
 	virtual ~Mover () {}
 	void tomber ();			// fait tomber un personnage (gardien) et se relever
 	void rester_au_sol ();	// fait tomber un personnage (gardien) et le laisse au sol.
+	void toucher(); //perd de la vie quand on est toucher.
+	void regen(int pv); //regenere la vie.
 	virtual void update (void) =0;	// fait 'penser' le personnage (gardien).
 	// fait bouger la boule de feu du personnage.
 	virtual bool process_fireball (float dx, float dy) =0;

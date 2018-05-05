@@ -1,5 +1,6 @@
 #include "Chasseur.h"
 
+using namespace std;
 /*
  *	Tente un deplacement.
  */
@@ -37,10 +38,21 @@ Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 		_wall_hit = new Sound ("sons/hit_wall.wav");
 }
 
-/*
- *	Fait bouger la boule de feu (ceci est une exemple, � vous de traiter les collisions sp�cifiques...)
- */
+void Chasseur::toucher(){
+	_life = max(_life-25,0);
+	message ("Your life : %d",_life);
+	if (_life==0) {
+		message ("Loss");
+	}
+}
+void Chasseur::regen(int pv){
+	_life = min(pv+_life,100);
+	message ("Your life : %d",_life);
+}
 
+/*
+*	Fait bouger la boule de feu (ceci est une exemple, � vous de traiter les collisions sp�cifiques...)
+*/
 bool Chasseur::process_fireball (float dx, float dy)
 {
 	// calculer la distance entre le chasseur et le lieu de l'explosion.

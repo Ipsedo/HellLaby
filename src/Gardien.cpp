@@ -4,6 +4,7 @@
 #include <iostream>
 #include <tuple>
 #include <math.h>
+#include <algorithm>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
@@ -13,6 +14,20 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	upSeuil = 50.f;
 	activeFireBall = false;
 }
+
+void Gardien::toucher(){
+	_life = std::max(_life-50,0);
+	if (_life==0) {
+		message ("Mort");
+		rester_au_sol();
+	}else{
+		tomber();
+	}
+}
+void Gardien::regen(int pv){
+	_life = std::min(pv+_life,100);
+}
+
 
 std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 	std::vector<std::pair<int, int> > dir;

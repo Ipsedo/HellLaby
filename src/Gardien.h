@@ -22,6 +22,8 @@ public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
 
+	void toucher();
+	void regen(int pv);
 	// mon gardien pense tr�s mal!
 	void update (void);// {};
 	// et ne bouge pas!
