@@ -103,9 +103,12 @@ void Chasseur::fire (int angle_vertical)
 	float randomVertical = (float) std::rand() / RAND_MAX;
 	if ((float) std::rand() / RAND_MAX > 0.5) {
 		angleH = _angle + precision * randomHorizontal;
-		angleV = angle_vertical + precision * randomVertical;
 	} else {
 		angleH = _angle - precision * randomHorizontal;
+	}
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleV = angle_vertical + precision * randomVertical;
+	} else {
 		angleV = angle_vertical - precision * randomVertical;
 	}
 
