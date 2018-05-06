@@ -6,6 +6,11 @@ using namespace std;
 /*
  *	Tente un deplacement.
  */
+ void Chasseur::compteur(){
+	 std::this_thread::sleep_for (std::chrono::seconds(3));
+	 this->regen(100);
+ }
+
 
 bool Chasseur::move_aux (double dx, double dy)
 {
@@ -58,15 +63,6 @@ void Chasseur::regen(int pv){
 	message ("Your life : %d",_life);
 }
 
-void Chasseur::update (void){
-	std::cout << "la" << '\n';
-	no_move++;
-	if(no_move == 100){
-		std::cout << "ici" << '\n';
-		regen(100);
-		no_move=0;
-	}
-}
 /*
 *	Fait bouger la boule de feu (ceci est une exemple, � vous de traiter les collisions sp�cifiques...)
 */
