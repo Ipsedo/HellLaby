@@ -7,8 +7,13 @@ using namespace std;
  *	Tente un deplacement.
  */
  void Chasseur::compteur(){
-	 std::this_thread::sleep_for (std::chrono::seconds(3));
-	 this->regen(100);
+   int cpt = 0;
+   while (!stop_thread && cpt < 300) {
+     std::this_thread::sleep_for (std::chrono::milliseconds(3));
+     cpt++;
+   }
+	 //std::this_thread::sleep_for (std::chrono::seconds(3));
+   if (!stop_thread) this->regen(100);
  }
 
 
@@ -44,6 +49,7 @@ Chasseur::Chasseur (Labyrinthe* l) : Mover (100, 80, l, 0)
 {
 	no_move = 0;
 	max_life = _life;
+  stop_thread = true;
 	_hunter_fire = new Sound ("sons/hunter_fire.wav");
 	_hunter_hit = new Sound ("sons/hunter_hit.wav");
 	if (_wall_hit == 0)

@@ -17,6 +17,7 @@ private:
 	bool move_aux (double dx, double dy);
 	int no_move;
 	int max_life;
+	bool stop_thread;
 	void compteur();
 	std::thread moving;
 
@@ -35,7 +36,11 @@ public:
 
 	bool move (double dx, double dy) {
 		no_move = 0;
-		moving.kill
+		if (!stop_thread) {
+			stop_thread = true;
+			moving.join();
+		}
+		stop_thread = false;
 		moving = std::thread(&Chasseur::compteur, this);
 		return move_aux (dx, dy) || move_aux (dx, 0.0) || move_aux (0.0, dy);
 	}
