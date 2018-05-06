@@ -15,11 +15,13 @@ public:
 	float		_x, _y;		// position.
 	int			_angle;		// angle de d�placement/tir.
 	void*		_model;			// le mod�le graphique.
+	int 		_life;
 
 	Mover (int x, int y, Labyrinthe* l, const char* modele) :
 		_l ((Environnement*)l), _fb (0), _x ((float)x), _y ((float)y),
 		_angle (0)
-	{ _model = init (modele); }
+	{ _model = init (modele);
+	 	_life = 100;}
 	virtual ~Mover () {}
 	void tomber ();			// fait tomber un personnage (gardien) et se relever
 	void rester_au_sol ();	// fait tomber un personnage (gardien) et le laisse au sol.

@@ -9,6 +9,7 @@
 #define FULL  1
 #define GARDIEN 2
 
+extern void partie_terminee(bool hasWin); 
 extern void message (const char* format, ...);
 class Mover;
 

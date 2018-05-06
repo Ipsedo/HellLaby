@@ -1,9 +1,11 @@
 #include "Gardien.h"
 #include "Dijkstra.h"
+#include "Chasseur.h"
 #include <cstdlib>
 #include <iostream>
 #include <tuple>
 #include <math.h>
+#include <algorithm>
 
 Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele) {
 	dir = false;
@@ -12,7 +14,24 @@ Gardien::Gardien (Labyrinthe* l, const char* modele) : Mover (120, 80, l, modele
 	downSeuil = 30.f;
 	upSeuil = 50.f;
 	activeFireBall = false;
+	max_life = _life;
+	dead = false;
 }
+
+void Gardien::toucher(){
+	_life = std::max(_life-50,0);
+	if (_life==0) {
+		message ("Mort");
+		rester_au_sol();
+		dead = true;
+	}else{
+		tomber();
+	}
+}
+void Gardien::regen(int pv){
+	_life = std::min(pv+_life,100);
+}
+
 
 std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 	std::vector<std::pair<int, int> > dir;
@@ -30,7 +49,7 @@ std::pair<int, int> randomDir(Environnement* l, std::pair<int, int> pos) {
 }
 
 void Gardien::update (void) {
-
+	if (dead) return;
 	if (cpt == 0) {
 		float score = 0.f;
 		for (int i = 1; i < _l->_nguards; i++) {
@@ -48,13 +67,11 @@ void Gardien::update (void) {
 	bool willUpdate = (int)_x% 10 == (int)(_l->scale/2) && (int)_y%10 == (int)(_l->scale/2);
 
 	if (willUpdate) {
-
-		message("%d",this->isSeing());
-		if (this->isSeing()){
+		if (this->isSeing() && !activeFireBall){
 			activeFireBall = true;
 			float dx = _l->_guards[0]->_x - _x;
 			float dy = _l->_guards[0]->_y - _y;
-			_angle = 360 * atan2(dy, dx) / (M_PI * 2.) - 90;
+			_angle = -360 * atan2(dy, dx) / (M_PI * 2.) + 90;
 			this -> fire(0.);
 		}
 
@@ -64,13 +81,13 @@ void Gardien::update (void) {
 
 		if (isProtector) {
 			int dist = distDij(_l, this);
-			if (dist < 2) {
-				// Aléatoire
+			if (dist < 2 || (float) std::rand() / RAND_MAX < 0.2) {
+				// Pret du trésor ou mouvement pas précis pour dijkstra
 				auto dir = randomDir(_l, std::make_pair(oldX, oldY));
 				dirx = dir.first;
 				diry = dir.second;
 			} else {
-				// Dijsktra
+				// Dijkstra
 				auto a = dijkstra(_l,this);
 				dirx = a.first;
 				diry = a.second;
@@ -103,7 +120,24 @@ bool Gardien::move (double dx, double dy) {
 }
 
 void Gardien::fire (int angle_vertical) {
-	_fb->init(_x, _y , Environnement::scale, angle_vertical, _angle);
+	float coeffPrecision = 5.f;
+	float precision = (1.f - _life / max_life) * coeffPrecision;
+
+	float angleH;
+	float angleV;
+	float randomHorizontal = (float) std::rand() / RAND_MAX;
+	float randomVertical = (float) std::rand() / RAND_MAX;
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleH = _angle + precision * randomHorizontal;
+	} else {
+		angleH = _angle - precision * randomHorizontal;
+	}
+	if ((float) std::rand() / RAND_MAX > 0.5) {
+		angleV = angle_vertical + precision * randomVertical;
+	} else {
+		angleV = angle_vertical - precision * randomVertical;
+	}
+	_fb->init(_x, _y , Environnement::scale, angleV, angleH);
 }
 
 bool Gardien::process_fireball (float dx, float dy) {
@@ -112,138 +146,59 @@ bool Gardien::process_fireball (float dx, float dy) {
 	float	y = (_y - _fb->get_y()) / Environnement::scale;
 	float	dist2 = x*x + y*y;
 	// on bouge que dans le vide!
-	if (FULL != _l->data((int)((_fb->get_x() + dx) / Environnement::scale),
-	(int)((_fb->get_y() + dy) / Environnement::scale)))
-	{
-		message ("[MOB] Woooshh ..... %d", (int) dist2);
+	int currX = (int)((_fb->get_x() + dx) / Environnement::scale);
+	int currY = (int)((_fb->get_y() + dy) / Environnement::scale);
+
+	int chasseurX = _l->_guards[0]->_x / Environnement::scale;
+	int chasseurY = _l->_guards[0]->_y / Environnement::scale;
+	if (chasseurX == currX && chasseurY == currY) {
+		Chasseur* c = dynamic_cast<Chasseur*>(_l->_guards[0]);
+		c->toucher();
+	}
+
+	int currCase = _l->data(currX, currY);
+	if (FULL != currCase) {
 		// il y a la place.
 		return true;
 	}
-	// collision...
-	// calculer la distance maximum en ligne droite.
-	//float	dmax2 = (_l->width ())*(_l->width ()) + (_l->height())*(_l->height());
-	// faire exploser la boule de feu avec un bruit fonction de la distance.
-	//_wall_hit -> play (1. - dist2/dmax2);
+
 	activeFireBall = false;
-	message ("[MOB] Booom...%d,%d", (int)((_fb->get_x() + dx) / Environnement::scale),
-	(int)((_fb->get_y() + dy) / Environnement::scale));
 	return false;
 }
 
-bool Gardien::plotLineLow(int x0, int y0, int x1, int y1) {
-  int dx = x1 - x0;
-  int dy = y1 - y0;
-  int yi = 1;
-  if (dy < 0) {
-    yi = -1;
-    dy = -dy;
-  }
-  int D = 2*dy - dx;
-  int y = y0;
-
-	if (x0 < x1) {
-  	for (int x = x0; x < x1; x++) {
-			if (_l->data(x, y) != EMPTY)
-				return false;
-    	if (D > 0) {
-       	y = y + yi;
-       	D = D - 2*dx;
-    	}
-    	D = D + 2*dy;
-		}
-	} else {
-		for (int x = x0; x > x1; x--) {
-			if (_l->data(x, y) != EMPTY)
-				return false;
-    	if (D > 0) {
-       	y = y + yi;
-       	D = D - 2*dx;
-    	}
-    	D = D + 2*dy;
-		}
-	}
-	return true;
-}
-
-bool Gardien::plotLineHigh(int x0, int y0, int x1, int y1) {
-	int dx = x1 - x0;
-  int dy = y1 - y0;
-  int xi = 1;
-  if (dx < 0) {
-    xi = -1;
-    dx = -dx;
-  }
-  int D = 2*dx - dy;
-  int x = x0;
-
-	if (y0 < y1) {
-  	for (int y = y0; y < y1; y++) {
-			if (_l->data(x, y) != EMPTY)
-				return false;
-    	if (D > 0) {
-       	x = x + xi;
-       	D = D - 2*dy;
-    	}
-    	D = D + 2*dx;
-		}
-	} else {
-		for (int y = y0; y > y1; y--) {
-			if (_l->data(x, y) != EMPTY)
-				return false;
-    	if (D > 0) {
-       	x = x + xi;
-       	D = D - 2*dy;
-    	}
-    	D = D + 2*dx;
-		}
-	}
-	return true;
+float sign(float f) {
+	if (f > 0.f) return 1.f;
+	else if (f < 0.f) return -1.f;
+	else return 0.f;
 }
 
 bool Gardien::isSeing() {
 	Mover* toSee = _l->_guards[0];
-	/*
-	https://en.wikipedia.org/wiki/Line_drawing_algorithm
-	dx = x2 - x1
-	dy = y2 - y1
-	for x from x1 to x2 {
-  	y = y1 + dy * (x - x1) / dx
-  	plot(x, y)
-	}
-	*/
+
 	int x0 = _x / Environnement::scale;
 	int y0 = _y / Environnement::scale;
 
 	int x1 = toSee->_x / Environnement::scale;
 	int y1 = toSee->_y / Environnement::scale;
 
-	/*int dx = targetX - currX;
-	int dy = targetY - currY;
-
-	if (currX < targetX) {
-		for (int i = currX; i < targetX; i++) {
-			int y = currY + dy * (i - currX) / dx;
-			if (_l->data(i, y) != EMPTY)
-				return false;
-		}
+	// https://www.tutorialspoint.com/computer_graphics/line_generation_algorithm.htm
+	float dx = x1 - x0;
+	float dy = y1 - y0;
+	float step;
+	if (abs(dx) > abs(dy)) {
+		step = abs(dx);
 	} else {
-		for (int i = currX; i > targetX; i--) {
-			int y = currY + dy * (i - currX) / dx;
-			if (_l->data(i, y) != EMPTY)
-				return false;
-		}
-	}*/
-  if (abs(y1 - y0) < abs(x1 - x0)) {
-    if (x0 > x1) {
-      return plotLineLow(x1, y1, x0, y0);
-    } else {
-      return plotLineLow(x0, y0, x1, y1);
-    }
-  } else {
-    if (y0 > y1) {
-      return plotLineHigh(x1, y1, x0, y0);
-    } else {
-      return plotLineHigh(x0, y0, x1, y1);
-    }
-  }
+		step = abs(dy);
+	}
+	float x = x0;
+	float y = y0;
+	float xIncr = dx / step;
+	float yIncr = dy / step;
+	for (int i = 0; i < step; i++) {
+		x += xIncr;
+		y += yIncr;
+		if (_l->data(x, y) != EMPTY)
+			return false;
+	}
+	return true;
 }

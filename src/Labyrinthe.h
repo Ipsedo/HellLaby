@@ -24,21 +24,7 @@ public:
 	int width () { return lab_w;}	// retourne la largeur du labyrinthe.
 	int height () { return lab_h;}	// retourne la longueur du labyrinthe.
 	void setdata(int i,int j, char c) {this->_data[i][j] = c;}
-	char data (int i, int j)
-	{
-		return _data[i][j];
-		// int isFull = _data [i][j];
-		// if (isFull == FULL)
-		// 	return isFull;
-		// for (auto m : guards) {
-		// 	int x = m->_x / scale;
-		// 	int y = m->_y / scale;
-		// 	if (x == i && y == j) {
-		// 		return FULL;
-		// 	}
-		// }
-		// return EMPTY;
-	}	// retourne la case (i, j).
+	char data (int i, int j) {return _data[i][j];}
 };
 
 #endif

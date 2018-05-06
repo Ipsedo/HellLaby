@@ -16,12 +16,14 @@ private:
 	int cpt;
 	bool haveHitWall;
 	bool activeFireBall;
-	bool plotLineHigh(int x0, int y0, int x1, int y1);
-	bool plotLineLow(int x0, int y0, int x1, int y1);
+	int max_life;
+	bool dead;
 public:
 	Gardien (Labyrinthe* l, const char* modele);/* : Mover (120, 80, l, modele)
 	{}*/
 
+	void toucher();
+	void regen(int pv);
 	// mon gardien pense tr�s mal!
 	void update (void);// {};
 	// et ne bouge pas!
